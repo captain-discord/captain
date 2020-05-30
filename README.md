@@ -69,7 +69,7 @@ docker build . --tag artemis:latest
 
 Building might take a while, but once you're done, you can run Artemis by doing:
 ```
-docker run -d --name artemis artemis:latest
+docker run -d --name artemis --network="host" artemis:latest
 ```
 
 #### You're good to go
