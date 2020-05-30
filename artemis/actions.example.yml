@@ -1,0 +1,155 @@
+base: "[`{at}`] {emoji} | {text}"
+time_format: "%H:%M:%S"
+
+# ================
+# User punishments
+# ================
+MEMBER_BAN:
+    emoji: 🚪
+
+    text: "[`#{case}`] | {user} (`{user.id}`) has been banned by {actor} (`{actor.id}`) for `{reason}`"
+
+MEMBER_TEMPBAN:
+    emoji: 🚪
+
+    text: "[`#{case}`] | {user} (`{user.id}`) has been banned by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+
+MEMBER_BAN_EXPIRE:
+    emoji: 😇
+
+    text: "{user} (`{user.id}`) has been automatically unbanned because their tempban (`#{case}`) expired."
+
+MEMBER_SOFTBAN:
+    emoji: 🚪
+
+    text: "[`#{case}`] | {user} (`{user.id}`) has been softbanned by {actor} (`{actor.id}`) for `{reason}`"
+
+MEMBER_UNBAN:
+    emoji: 😇
+
+    text: "{user} (`{user.id}`) has been unbanned by {actor} (`{actor.id}`)."
+
+MEMBER_KICK:
+    emoji: 👢
+
+    text: "[`#{case}`] | {user} (`{user.id}`) has been kicked by {actor} (`{actor.id}`) for `{reason}`"
+    
+MEMBER_MUTE:
+    emoji: 😶
+
+    text: "[`#{case}`] | {user} (`{user.id}`) has been muted by {actor} (`{actor.id}`) for `{reason}`"
+
+MEMBER_TEMPMUTE:
+    emoji: 😶
+
+    text: "[`#{case}`] | {user} (`{user.id}`) has been muted by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+
+MEMBER_MUTE_EXPIRE:
+    emoji: 😲
+
+    text: "{user} (`{user.id}`) has been automatically unmuted because their tempmute (`#{case}`) expired."
+
+MEMBER_UNMUTE:
+    emoji: 😲
+
+    text: "{user} (`{user.id}`) has been unmuted by {actor} (`{actor.id}`)."
+
+MEMBER_WARN:
+    emoji: ⚠️
+
+    text: "[`#{case}`] | {user} (`{user.id}`) has been warned by {actor} (`{actor.id}`) for `{reason}`"
+
+# ======================
+# Locking down a channel
+# ======================
+LOCKDOWN:
+    emoji: 🚨
+    
+    text: "{actor} (`{actor.id}`) has activated lockdown in **#{channel}**."
+    
+LOCKDOWN_TEMP:
+    emoji: 🚨
+    
+    text: "{actor} (`{actor.id}`) has activated lockdown in **#{channel}** for {duration}."
+        
+LOCKDOWN_EXPIRE:
+    emoji: 🚨
+    
+    text: "Lockdown in **#{channel}** has been automatically deactivated because it has expired."
+
+LOCKDOWN_CANCEL:
+    emoji: 🚨
+    
+    text: "{actor} (`{actor.id}`) has deactivated lockdown in **#{channel}**."
+
+# ===============
+# Message logging
+# ===============
+MESSAGE_EDIT:
+    emoji: 📝
+
+    text: "Message (`{after.id}`) by {after.author} (`{after.author.id}`) in **#{after.channel}** has been edited:\n{after.jump_url}\n\n**Old message:**\n\n{before.clean_content}\n\n**New message:**\n\n{after.clean_content}"
+
+MESSAGE_DELETE:
+    emoji: 🗑️
+
+    text: "Message (`{message.id}`) by {message.author} (`{message.author.id}`) in **#{message.channel}** has been deleted:\n{message.jump_url}\n\n{message.clean_content}"
+
+MESSAGE_BULK_DELETE:
+    emoji: 💣
+
+    text: "{amount} messages have been purged in **#{channel}** (`{channel.id}`)."
+
+# ==============
+# Member logging
+# ==============
+MEMBER_JOIN:
+    emoji: 📥
+
+    text: "{user} (`{user.id}`) is the {ordinal} member to join the server."
+
+MEMBER_LEAVE:
+    emoji: 📤
+
+    text: "{user} (`{user.id}`) has left the server, they joined {joined_ago} ago."
+
+# ==============
+# Action logging
+# ==============
+ROLE_CREATE:
+    emoji: 🖊️
+
+    text: "**{role}** (`{role.id}`) role has been created."
+
+ROLE_DELETE:
+    emoji: 🗑️
+
+    text: "**{role}** (`{role.id}`) role has been deleted."
+
+CHANNEL_CREATE:
+    emoji: 🖊️
+
+    text: "**#{channel}** (`{channel.id}`) {channel.type} channel has been created."
+
+CHANNEL_DELETE:
+    emoji: 🗑️
+
+    text: "**#{channel}** (`{channel.id}`) {channel.type} channel has been deleted."
+
+# ================
+# Nickname logging
+# ================
+NICKNAME_ADD:
+    emoji: 📛
+
+    text: "{user} (`{user.id}`) set their nickname to `{nick}`."
+
+NICKNAME_CHANGE:
+    emoji: 📛
+
+    text: "{user} (`{user.id}`) changed their nickname from `{before}` to `{after}`."
+
+NICKNAME_REMOVE:
+    emoji: 📛
+
+    text: "{user} (`{user.id}`) removed their nickname `{nick}`."

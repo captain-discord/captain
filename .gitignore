@@ -1,3 +1,9 @@
+# Configuration files
+actions.yml
+config.yml
+emojis.yml
+guilds.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

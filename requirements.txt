@@ -1,0 +1,8 @@
+attrdict
+asyncpg
+discord
+redis
+tabulate
+termcolor
+pyfiglet
+pyyaml
