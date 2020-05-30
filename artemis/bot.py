@@ -214,7 +214,7 @@ class Artemis(blueprint, commands.Bot):
             console.info(text="Connected to Redis server at: {r.host}:{r.port}/{r.database}".format(r=config.redis))
 
         except exceptions.ConnectionError as error:
-            console.fatal(text="Failed to connect to Redis at: {r.host}:{r.port}/{r.database}\n\n{error}\n\n{cause}".format(r=config.redis,
+            console.fatal(text="Failed to connect to Redis at: {r.host}:{r.port}/{r.database}\n\n{error}".format(r=config.redis,
                                                                                                                             error=error))
             self.shutdown()
 
