@@ -87,6 +87,11 @@ class Checks(blueprint, commands.Cog, name="Global Checks"):
         COMMANDS = {
             0: [command.name for command in self.artemis.commands],
             90: [
+                "inf",
+                "inf recent",
+                "inf search",
+
+                "bean"
                 "ban",
                 "unban",
                 "softban",
@@ -106,7 +111,11 @@ class Checks(blueprint, commands.Cog, name="Global Checks"):
                 "purge here"
             ],
             100: [
-                "lockdown"
+                "lockdown",
+                "lockdown start",
+                "lockdown end",
+
+                "inf clear"
             ]
         }
 
