@@ -159,7 +159,7 @@ class Emoji(blueprint):
 
             return self.REP_BASE.format(self)
 
-        return f":{self.name}:"
+        return self.name
 
     @property
     def react(self) -> str:
