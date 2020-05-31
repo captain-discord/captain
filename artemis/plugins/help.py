@@ -29,7 +29,7 @@ import menus as menus
 import util.utilities as utils
 
 from custos import blueprint
-from util import console, embed
+from util import console
 from util.blueprints import CommandSet
 from util.constants import config
 from util.exceptions import ArtemisException

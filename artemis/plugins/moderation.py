@@ -34,7 +34,7 @@ from custos import blueprint
 
 from plugins.timers import Timer
 
-from util import console, embed
+from util import console
 from util.constants import config, emojis, guilds, postgres, redis
 from util.enumerators import InfractionType
 from util.exceptions import ArtemisException, UserNotFound

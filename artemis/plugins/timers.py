@@ -31,7 +31,7 @@ from discord.ext import commands
 import util.utilities as utils
 
 from custos import blueprint
-from util import console, embed
+from util import console
 from util.constants import emojis, postgres
 
 
