@@ -49,7 +49,7 @@ async def new_infraction(artemis: Artemis,
     reason = inf_data.pop("reason", "N/A")
     target = inf_data.pop("target")
     actor = inf_data.pop("actor")
-    dur_friendly = inf_data.pop("dur_friendly")
+    dur_friendly = inf_data.pop("dur_friendly", None)
 
     async with postgres.acquire() as con:
         query_1 = """SELECT case_id 
@@ -1389,7 +1389,7 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
                                                                           })
 
             if expiring_timer is not None:
-                console.debug(text=f"Prematurely cancelling task {expiring_timer.id} because they were unbanned before it expired.")
+                console.debug(text=f"Prematurely cancelling task {expiring_timer.id} because they were unmuted before it expired.")
 
                 await expiring_timer.cancel()
 
