@@ -209,6 +209,21 @@ class Commands(blueprint, commands.Cog, name="Moderation Commands"):
             raise Exceptions.CannotPunishUser(user=target,
                                               reason=f"My highest role ({actor.guild.me.top_role.mention}) needs to be above {target}'s highest role ({target.top_role.mention})")
 
+    @commands.command(name="bean",
+                      usage="bean <target:user> [reason:text]",
+                      hidden=True)
+    @commands.bot_has_permissions(ban_members=True)
+    async def bean(self,
+                   ctx: commands.Context,
+                   target: discord.Member,
+                   *, reason: Optional[str] = "No reason given."):
+        """Beans a member from the server."""
+
+        self.can_punish(actor=ctx.author,
+                        target=target)
+
+        await ctx.send(content=f"{emojis.tick_yes} {target} (`{target.id}`) has been beaned for:\n{reason}")
+
     @commands.command(name="ban",
                       usage="ban <target:user> [reason:text]")
     @commands.bot_has_permissions(ban_members=True)
