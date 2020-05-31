@@ -1036,7 +1036,7 @@ class Exceptions(blueprint, commands.Cog, name="Moderation Exceptions"):
     
         if isinstance(error, commands.CommandInvokeError):
             if isinstance(error.original, self.CannotPunishUser):
-                return await ctx.send(content=f"🚫 You cannot perform that action on {error.original.user}.")
+                return await ctx.send(content=f"🚫 You cannot {ctx.command.name} {error.original.user}.")
 
             if isinstance(error.original, self.AlreadyBanned):
                 return await ctx.send(content=f"🙁 {error.original.user} has already been banned.")
