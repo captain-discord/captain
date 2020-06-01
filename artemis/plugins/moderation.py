@@ -1184,7 +1184,7 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
                          message: discord.Message):
         """This handles anti ping spam for the particular server."""
 
-        if message.guild is None or message.author == self.artemis.user:
+        if message.guild is None or message.author == self.artemis.user or not message.mentions:
             return
 
         ping_spam_config = guilds.get(message.guild.id, {}).get("anti", {}).get("pings", {})
@@ -1199,7 +1199,8 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
                                                                                               condition=lambda r: r in (role.id for role in message.author.roles)):
             return
 
-        count = redis.incr(f"ping:{message.guild.id}:{message.author.id}")
+        for mention in message.mentions:
+            count = redis.incr(f"ping:{message.guild.id}:{message.author.id}")
         redis.expire(f"ping:{message.guild.id}:{message.author.id}", threshold)
 
         if count > max_count - 1:
