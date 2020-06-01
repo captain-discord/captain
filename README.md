@@ -13,6 +13,7 @@ You didn't come here to listen to me chatter about the unimportant stuff, you wa
 - Auto role
 - Anti spam and invite
 - Very high configurability
+- Message archive to save sent messages
 
 ## Planned features
 
@@ -20,7 +21,6 @@ Here's what you can look forward to by clicking the Watch button in the top righ
 - Reminders
 - Configurable strike system to punish users after x warnings
 - Anti links and swearing
-- Message archiving to save messages
 - Starboards
 - A web dashboard so that you don't have to restart to change a guild's config
 - Custom commands
@@ -56,20 +56,13 @@ If you have setup everything above, you need to configure, build and run the bot
 
 #### Configuring the bot
 
-First of, you'll **NEED** to go into the artemis folder and rename every .example.yml to just have .yml on the end (get rid of the .example). Then, you'll need to head into the config.yml and guilds.yml files to edit the settings, this might take a while.
+First of, you'll **NEED** to go into the artemis, nginx and dashboard folders and rename every .example.yml file to just have .yml on the end (get rid of the .example). Then, you'll need to head into those files to edit the settings, this might take a while. 
 
-#### Building the image
+#### Deploying the bot
 
-To build a Docker image of Artemis, cd into the repository and run the command below:
+Docker compose makes everything easy to deploy. All you need to do is make sure it's installed on your machine then run the following command.
 ```
-docker build . --tag artemis:latest
-```
-
-#### Running the image
-
-Building might take a while, but once you're done, you can run Artemis by doing:
-```
-docker run -d --name artemis --network="host" artemis:latest
+docker-compose up --build --detatch
 ```
 
 #### You're good to go
