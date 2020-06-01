@@ -13,17 +13,7 @@ services:
     dashboard: 
         build: ./dashboard
         container_name: artemis_dashboard
-        depends_on: 
-            - nginx
         restart: always
         
         ports:
             - 6543:6543
-
-    nginx:
-        build: ./nginx
-        container_name: artemis_nginx
-        restart: always
-
-        ports:
-            - 80:80
