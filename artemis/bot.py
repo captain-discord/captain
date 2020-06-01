@@ -67,9 +67,7 @@ except ImportError as error:
 
 class Artemis(blueprint, commands.Bot):
     def on_exit(self):
-        """This runs some code before we quietly close down.
-        
-        With this we can quickly dump the cached console logs to a file before the program exits."""
+        """This runs some code before we quietly close down."""
         
         console.fatal(text="Shutting down...")
         self.print_fig(stop=True)
@@ -143,9 +141,7 @@ class Artemis(blueprint, commands.Bot):
     async def _prefix_callable(self,
                                artemis: commands.Bot,
                                message: discord.Message) -> Union[Callable, List]:
-        """A callable that returns an appropriate prefix.
-        
-        This uses the data available from the message and it's attributes."""
+        """A callable that returns an appropriate prefix."""
 
         local_config = config.prefix
 

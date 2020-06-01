@@ -108,7 +108,13 @@ class Checks(blueprint, commands.Cog, name="Global Checks"):
                 "purge channel",
                 "purge user",
                 "purge bots",
-                "purge here"
+                "purge here",
+
+                "archive",
+                "archive channel",
+                "archive user",
+                "archive bots",
+                "archive here"
             ],
             100: [
                 "lockdown",

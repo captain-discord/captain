@@ -1,0 +1,7 @@
+attrdict
+flask
+gevent
+termcolor
+pyfiglet
+psycopg2
+pyyaml

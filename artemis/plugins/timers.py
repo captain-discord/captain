@@ -35,7 +35,7 @@ from util import console
 from util.constants import emojis, postgres
 
 
-EVENT_BASE = "on_{event}_expire"
+EVENT_BASE = "{event}_expire"
 
 class Timer(blueprint):
     """Each timer object handles the state of their respective timer and callbacks."""
@@ -143,7 +143,7 @@ class Timer(blueprint):
 
         console.debug(f"Dispatched timer {self.id} with event {EVENT_BASE.format(event=self.event)}.")
 
-        self.artemis.dispatch(event_name=EVENT_BASE[3:].format(event=self.event),
+        self.artemis.dispatch(event_name=EVENT_BASE.format(event=self.event),
                               **self.extras)
 
 

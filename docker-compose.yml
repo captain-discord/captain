@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+    bot:
+        build: ./artemis
+        container_name: artemis_bot
+        depends_on: 
+            - dashboard
+        restart: always
+
+        network_mode: host
+
+    dashboard: 
+        build: ./dashboard
+        container_name: artemis_dashboard
+        depends_on: 
+            - nginx
+        restart: always
+        
+        ports:
+            - 6543:6543
+
+    nginx:
+        build: ./nginx
+        container_name: artemis_nginx
+        restart: always
+
+        ports:
+            - 80:80

@@ -638,8 +638,7 @@ class Commands(blueprint, commands.Cog, name="Moderation Commands"):
 
         await ctx.message.delete()
 
-        if target is None:
-            target = ctx.channel
+        target = target or ctx.channel
 
         purged = await target.purge(limit=amount,
                                     check=lambda m: m.author.bot)
@@ -1179,6 +1178,34 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
             if message.guild.me.guild_permissions.manage_messages:
                 await message.channel.purge(limit=max_count,
                                             check=lambda m: m.author == message.author)
+
+    @commands.Cog.listener(name="on_message")
+    async def anti_pings(self,
+                         message: discord.Message):
+        """This handles anti ping spam for the particular server."""
+
+        if message.guild is None or message.author == self.artemis.user:
+            return
+
+        ping_spam_config = guilds.get(message.guild.id, {}).get("anti", {}).get("pings", {})
+        
+        if not ping_spam_config.get("enabled", False):
+            return
+        
+        max_count = ping_spam_config.get("count", 5)
+        threshold = ping_spam_config.get("threshold", 5)
+
+        if message.channel.id in ping_spam_config.get("bypassed_channels", []) or utils.first(iterable=ping_spam_config.get("bypassed_roles", []),
+                                                                                              condition=lambda r: r in (role.id for role in message.author.roles)):
+            return
+
+        count = redis.incr(f"ping:{message.guild.id}:{message.author.id}")
+        redis.expire(f"ping:{message.guild.id}:{message.author.id}", threshold)
+
+        if count > max_count - 1:
+            await self.respond(action=ping_spam_config.get("action", 0),
+                               message=message,
+                               reason=f"Ping spam detected in #{message.channel} ({max_count}/{threshold}s)")
 
     @commands.Cog.listener(name="on_message")
     async def anti_invite(self,

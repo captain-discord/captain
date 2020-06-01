@@ -1,6 +1,6 @@
 token: no-token.4.u
   
-website: https://jacktek.net
+website: https://artemis.jacktek.net
 
 message_cache: 100000
 owners:
@@ -50,3 +50,7 @@ redis:
 
   password: youshallnotpass
   database: 0
+
+archive:
+  endpoint: /api/archive
+  token: youshallnotpass

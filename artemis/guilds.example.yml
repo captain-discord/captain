@@ -56,6 +56,18 @@
             bypassed_channels:
                 - 123456789098765432 # channel ID
 
+        pings:
+            enabled: true
+            action: 2
+
+            count: 10
+            threshold: 60
+
+            bypassed_roles:
+                - 123456789098765432 # role ID
+            bypassed_channels:
+                - 123456789098765432 # channel ID
+
         invite:
             enabled: true
             action: 4
