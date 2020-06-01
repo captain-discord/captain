@@ -17,3 +17,4 @@ services:
         
         ports:
             - 6543:6543
+        network_mode: host
