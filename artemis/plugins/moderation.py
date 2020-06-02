@@ -146,7 +146,7 @@ class Commands(blueprint, commands.Cog, name="Moderation Commands"):
             "year": 86400 * 365,
             "years": 86400 * 365
         }
-        TIME_REGEX = compile(rf"(?:(\d)\s?({'|'.join(key for key in TIME_DICT.keys())}))+?")
+        TIME_REGEX = compile(rf"(?:([0-9]+)\s?({'|'.join(key for key in TIME_DICT.keys())}))+?")
 
         async def convert(self, 
                           argument: str):
@@ -1199,8 +1199,9 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
                                                                                               condition=lambda r: r in (role.id for role in message.author.roles)):
             return
 
-        for mention in message.mentions:
-            count = redis.incr(f"ping:{message.guild.id}:{message.author.id}")
+        for mentioned_user in message.mentions:
+            if mentioned_user != message.author:
+                count = redis.incr(f"ping:{message.guild.id}:{message.author.id}")
         redis.expire(f"ping:{message.guild.id}:{message.author.id}", threshold)
 
         if count > max_count - 1:
@@ -1340,26 +1341,57 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
         """Handles auto unmute for temp mutes."""
         
         guild = self.artemis.get_guild(id=guild)
-        target = guild.get_member(user_id=target)
+        member = guild.get_member(user_id=target)
 
         if not guild.me.guild_permissions.manage_roles:
             return
 
-        role = guild.get_role(role_id=guilds.get(guild.id, {}).get("moderation", {}).get("mute_role"))
-        if None in (role, target):
+        guild_config = guilds.get(guild.id, {}).get("moderation", {})
+        role = guild.get_role(role_id=guild_config.get("mute_role"))
+
+        if role is None:
             return
 
-        if role not in target.roles:
-            return
+        if member:
+            if role not in member.roles:
+                return
 
-        await target.remove_roles(role,
-                                  reason="Temp mute expired.")
+            await member.remove_roles(role,
+                                      reason="Temp mute expired.")
+
+        else:
+            member = await self.artemis.fetch_user(user_id=target)
+
+            if member is None:
+                return
+
+            if guild_config.get("persistent_roles", {}).get("enabled", False):
+                async with postgres.acquire() as con:
+                    query = """SELECT role_ids
+                               FROM persistent_roles
+                               WHERE user_id = $1
+                               AND guild_id = $2;"""
+
+                    persistent_roles = await con.fetchval(query,
+                                                          member.id, guild.id)
+
+                    if persistent_roles:
+                        roles_as_list = utils.string_list(string=persistent_roles)
+                        roles_as_list.remove(role.id)
+
+                        query = """UPDATE persistent_roles
+                                   SET role_ids = $1
+                                   WHERE user_id = $2
+                                   AND guild_id = $3;"""
+
+                        await con.execute(query,
+                                          str(roles_as_list), member.id, guild.id)
 
         self.artemis.dispatch(event_name="logging_action",
                               guild=guild,
                               action="MEMBER_MUTE_EXPIRE",
                                 
-                              user=target,
+                              user=member,
                               case=case)
 
     @commands.Cog.listener()
@@ -1410,8 +1442,8 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
 
             await expiring_timer.cancel()
 
-    @commands.Cog.listener()
-    async def on_member_update(self,
+    @commands.Cog.listener(name="on_member_update")
+    async def auto_temp_cancel(self,
                                before: discord.Member,
                                after: discord.Member):
         """Cancels any running temp mute timers when the mute role is removed."""
@@ -1419,7 +1451,8 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
         if before.roles == after.roles:
             return 
 
-        role = after.guild.get_role(role_id=guilds.get(after.guild.id, {}).get("moderation", {}).get("mute_role"))
+        guild_config = guilds.get(after.guild.id, {}).get("moderation", {})
+        role = after.guild.get_role(role_id=guild_config.get("mute_role"))
 
         if role is None:
             return
@@ -1435,6 +1468,28 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
                 console.debug(text=f"Prematurely cancelling task {expiring_timer.id} because they were unmuted before it expired.")
 
                 await expiring_timer.cancel()
+            
+            if guild_config.get("persistent_roles", {}).get("enabled", False):
+                async with postgres.acquire() as con:
+                    query = """SELECT role_ids
+                               FROM persistent_roles
+                               WHERE user_id = $1
+                               AND guild_id = $2;"""
+
+                    persistent_roles = await con.fetchval(query,
+                                                        after.id, after.guild.id)
+
+                    if persistent_roles:
+                        roles_as_list = utils.string_list(string=persistent_roles)
+                        roles_as_list.remove(role.id)
+
+                        query = """UPDATE persistent_roles
+                                   SET role_ids = $1
+                                   WHERE user_id = $2
+                                   AND guild_id = $3;"""
+
+                        await con.execute(query,
+                                          str(roles_as_list), after.id, after.guild.id)
 
 
 LOCAL_COGS = [

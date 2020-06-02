@@ -80,6 +80,8 @@ async def upload_archive(author_id: int,
 class Commands(blueprint, commands.Cog, name="Archive Commands"):
     """Archiving messages allows server Staff to save logs of messages from bad actors and co."""
 
+    MAX_MESSAGES = 1000
+
     def __init__(self,
                  artemis: Artemis):
         self.artemis = artemis
@@ -100,6 +102,9 @@ class Commands(blueprint, commands.Cog, name="Archive Commands"):
                            amount: int):
         """Archives an amount of messages in the current channel."""
 
+        if not 1 < amount <= self.MAX_MESSAGES:
+            raise Exceptions.ImproperMessageCount(provided=amount)
+
         messages = await ctx.channel.history(limit=amount).flatten()
         messages.reverse()
 
@@ -110,12 +115,15 @@ class Commands(blueprint, commands.Cog, name="Archive Commands"):
         await ctx.send(content=f"{emojis.tick_yes} {len(messages)} messages have been archived at:\n{url}")
 
     @archive.command(name="user",
-                     usage="archive user <amount:num> <target:user>")
+                     usage="archive user <target:user> <amount:num>")
     async def archive_user(self,  
                            ctx: commands.Context,
-                           amount: int,
-                           target: Union[discord.Member, discord.User, int]):
+                           target: Union[discord.Member, discord.User, int],
+                           amount: int,):
         """Archives an amount of messages in the current channel that were sent by a user."""
+
+        if not 1 < amount <= self.MAX_MESSAGES:
+            raise Exceptions.ImproperMessageCount(provided=amount)
 
         if not isinstance(target, (discord.Member, discord.User)):
             target_id = utils.intable(obj=target)
@@ -135,12 +143,15 @@ class Commands(blueprint, commands.Cog, name="Archive Commands"):
         await ctx.send(content=f"{emojis.tick_yes} {len(messages)} messages have been archived at:\n{url}")
 
     @archive.command(name="channel",
-                     usage="archive channel <amount:num> <target:channel>")
+                     usage="archive channel <target:channel> <amount:num>")
     async def archive_channel(self,  
                               ctx: commands.Context,
-                              amount: int,
-                              target: discord.TextChannel):
+                              target: discord.TextChannel,
+                              amount: int,):
         """Archives an amount of messages in the specified channel."""
+
+        if not 1 < amount <= self.MAX_MESSAGES:
+            raise Exceptions.ImproperMessageCount(provided=amount)
 
         messages = await target.history(limit=amount).flatten()
         messages.reverse()
@@ -158,6 +169,9 @@ class Commands(blueprint, commands.Cog, name="Archive Commands"):
                            amount: int,
                            target: Optional[discord.TextChannel] = None):
         """Archives an amount of messages sent by bots in the current or specified channel."""
+
+        if not 1 < amount <= self.MAX_MESSAGES:
+            raise Exceptions.ImproperMessageCount(provided=amount)
 
         target = target or ctx.channel
 
@@ -181,6 +195,12 @@ class Exceptions(blueprint, commands.Cog, name="Archive Exceptions"):
                  artemis: Artemis):
         self.artemis = artemis
 
+
+    class ImproperMessageCount(ArtemisException):
+        def __init__(self,
+                     provided: int):
+            self.provided = provided
+
     
     class ArchiveFailed(ArtemisException):
         def __init__(self,
@@ -199,6 +219,13 @@ class Exceptions(blueprint, commands.Cog, name="Archive Exceptions"):
         if isinstance(error, commands.CommandInvokeError):
             if isinstance(error.original, self.ArchiveFailed):
                 return await ctx.send(content=f"🚫 Failed to contact archiving server. Check the logs.")
+
+            if isinstance(error.original, self.ImproperMessageCount):
+                if error.original.provided > 1:
+                    return await ctx.send(content=f"🚫 You're trying to archive too many messages.")
+
+                else:
+                    return await ctx.send(content=f"🚫 Pick a number higher than one.")
 
 
 LOCAL_COGS = [

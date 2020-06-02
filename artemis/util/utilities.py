@@ -15,6 +15,7 @@ from typing import Any, Callable, Iterable, List, Optional, Union
 # Builtin dependencies
 # --------------------
 from datetime import datetime
+from json import loads
 from random import randint
 
 
@@ -198,8 +199,7 @@ def friendly_user(guild: Guild,
 
     return str(member)
 
-def is_subset_dict(superset: dict,
-                   subset: dict) -> bool:
-    """Returns a boolean denoting whether a dictionary is a subset of another dictionary."""
+def string_list(string: str) -> list:
+    """Converts a stringified list into a list object."""
 
-    return all(item in superset.items() for item in subset.items())
+    return loads('{"_dump": ' + string + '}')["_dump"]

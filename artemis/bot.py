@@ -172,7 +172,8 @@ class Artemis(blueprint, commands.Bot):
         # =================================
         async with constants.postgres.acquire() as con:
             queries = ("""CREATE TABLE IF NOT EXISTS infractions (id SERIAL PRIMARY KEY, case_id SMALLINT, guild_id BIGINT, actor_id BIGINT, target_id BIGINT, type_id BIGINT, reason TEXT, timestamp TIMESTAMP);""",
-                       """CREATE TABLE IF NOT EXISTS timers (id SERIAL PRIMARY KEY, event TEXT, expire_at TIMESTAMP, extras TEXT);""")
+                       """CREATE TABLE IF NOT EXISTS timers (id SERIAL PRIMARY KEY, event TEXT, expire_at TIMESTAMP, extras TEXT);""",
+                       """CREATE TABLE IF NOT EXISTS persistent_roles (id SERIAL PRIMARY KEY, user_id BIGINT, guild_id BIGINT, role_ids TEXT, CONSTRAINT unique_user_guild UNIQUE (user_id, guild_id));""")
 
             for query in queries:
                 await con.execute(query)
