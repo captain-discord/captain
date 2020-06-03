@@ -1199,9 +1199,7 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
                                                                                               condition=lambda r: r in (role.id for role in message.author.roles)):
             return
 
-        for mentioned_user in message.mentions:
-            if mentioned_user != message.author:
-                count = redis.incr(f"ping:{message.guild.id}:{message.author.id}")
+        count = redis.incr(f"ping:{message.guild.id}:{message.author.id}")
         redis.expire(f"ping:{message.guild.id}:{message.author.id}", threshold)
 
         if count > max_count - 1:
