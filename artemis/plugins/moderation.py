@@ -1479,7 +1479,11 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
 
                     if persistent_roles:
                         roles_as_list = utils.string_list(string=persistent_roles)
-                        roles_as_list.remove(role.id)
+                        try:
+                            roles_as_list.remove(role.id)
+
+                        except:
+                            pass
 
                         query = """UPDATE persistent_roles
                                    SET role_ids = $1
