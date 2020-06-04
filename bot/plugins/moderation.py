@@ -1475,7 +1475,7 @@ class Listeners(blueprint, commands.Cog, name="Moderation Listeners"):
                                AND guild_id = $2;"""
 
                     persistent_roles = await con.fetchval(query,
-                                                        after.id, after.guild.id)
+                                                          after.id, after.guild.id)
 
                     if persistent_roles:
                         roles_as_list = utils.string_list(string=persistent_roles)

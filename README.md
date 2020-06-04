@@ -24,6 +24,8 @@ Here's what you can look forward to by clicking the Watch button in the top righ
 - Starboards
 - A web dashboard so that you don't have to restart to change a guild's config
 - Custom commands
+- Leveling
+- Reaction roles
 
 ## Who can host this?
 
@@ -45,26 +47,4 @@ Of course, I can't force you to obey these rules, but not obeying them would be 
 
 ## Running your own instance
 
-So you want to run your own instance? I hope you know what you're doing. Here's what you'll need to get started:
-- A PostgreSQL server
-- A Redis server
-- Docker on your host machine
-
-### Deploying the bot
-
-If you have setup everything above, you need to configure, build and run the bot, to do that follow the steps below.
-
-#### Configuring the bot
-
-First of, you'll **NEED** to go into the artemis, nginx and dashboard folders and rename every .example.yml file to just have .yml on the end (get rid of the .example). Then, you'll need to head into those files to edit the settings, this might take a while. 
-
-#### Deploying the bot
-
-Docker compose makes everything easy to deploy. All you need to do is make sure it's installed on your machine then run the following command.
-```
-docker-compose up --build --detatch
-```
-
-#### You're good to go
-
-That's it, you've deployed your instance of Artemis. If you noticed any issues, including bugs or problems setting it up altogether, please file an issue over on the GitHub Repository or contact me on Discord (details are earlier in the readme).
+For help with installing Artemis on your server, see my [official setup guide](https://docs.jacktek.net/artemis/getting-started).
