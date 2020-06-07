@@ -177,7 +177,7 @@ class Commands(blueprint, commands.Cog, name="General Commands"):
         await message.edit(content=f"🏓 **Roundtrip:** {msg_latency} ms | **Websocket:** {round(ctx.bot.latency * 1000)} ms")
 
     @commands.command(name="source",
-                      usage="source <command:text>")
+                      usage="source [command:text]")
     async def source(self,
                      ctx: commands.Context,
                      *, command: Optional[str] = None):
