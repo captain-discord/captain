@@ -2,6 +2,8 @@
 
 Artemis is my own personal take on a cross between GearBot and Rowboat. Of course, this bot is still in development and will be for a very long time.
 
+**If you need support or wish to report a bug, please join my Discord server: https://discord.gg/CsHF5GX**
+
 ## Features
 
 You didn't come here to listen to me chatter about the unimportant stuff, you want the feature list, well here it is:
