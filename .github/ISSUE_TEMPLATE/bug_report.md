@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-If you are a **Discord** user, please head to [my Discord server](https://discord.gg/CsHF5GX) and ask about reporting a bug with my specially-made Bug Bot. If you are **not** a Discord user, please proceed to create a report with the following template:
+NOTE TO ISSUE CREATOR - If you are a Discord user, please head to my Discord server at https://discord.gg/CsHF5GX and ask about reporting a bug with my specially-made Bug Bot. If you are not a Discord user, please proceed to create a report with the following template:
 
 ### Short description
 Here you will need to provide a brief description of the bug you've found.
