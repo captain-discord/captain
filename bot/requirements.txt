@@ -2,4 +2,3 @@ asyncpg
 discord.py
 redis
 tabulate
-pyyaml
