@@ -1,8 +1,5 @@
-attrdict
 asyncpg
-discord
+discord.py
 redis
 tabulate
-termcolor
-pyfiglet
 pyyaml

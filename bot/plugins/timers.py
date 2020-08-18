@@ -1,224 +1,183 @@
-# Copyright (C) JackTEK 2018-2020
-# -------------------------------
-
-# =====================
-# Import PATH libraries
-# =====================
-# ------------
-# Type imports
-# ------------
-from bot import Artemis
-from typing import Optional, Union
-
-
-# --------------------
-# Builtin dependencies
-# --------------------
-from asyncio import sleep
-from datetime import datetime, timedelta
-from json import dumps, loads
-
-# ------------------------
-# Third-party dependencies
-# ------------------------
 import discord
 
+import ext.state
+
+from asyncio import sleep
+from datetime import datetime, timedelta
 from discord.ext import commands
+from json import dumps, loads
 
-# -------------------------
-# Local extension libraries
-# -------------------------
-import util.utilities as utils
+from ext.utils import first
 
-from custos import blueprint
-from util import console
-from util.constants import emojis, postgres
+EVENT_BASE = "{}_expire"
 
+class Timer:
+	def __init__(self, bot, **timer_data):
+		self.bot = bot
+		self.id = timer_data.pop("id", 0)
 
-EVENT_BASE = "{event}_expire"
+		self.event = timer_data.pop("event")
+		self.extras = timer_data.pop("extras", {})
 
-class Timer(blueprint):
-    """Each timer object handles the state of their respective timer and callbacks."""
+		self.expire_at = timer_data.pop("expire_at")
 
-    def __init__(self,
-                 artemis: Artemis,
-                 **timer_data: dict):
-        self.artemis = artemis
-        self.id = timer_data.pop("id", 0)
+		self.cancelled = False
 
-        self.event = timer_data.pop("event")
-        self.extras = timer_data.pop("extras", {})
+	@classmethod
+	async def create(cls, bot, event, expire_at, extras):
+		"""Creates a running timer and inserts it into the database.
+		
+		The extras dict has to be serialised into a string so that Postgres can store it."""
 
-        self.expire_at = timer_data.pop("expire_at")
+		async with bot.postgres.acquire() as con:
+			query = """INSERT INTO timers (event, expire_at, extras) VALUES ($1, $2, $3::jsonb) RETURNING id;"""
 
-        self.cancelled = False
+			id = await con.fetchval(query, event, expire_at, dumps(extras))
 
-    @classmethod
-    async def create(cls,
-                     artemis: Artemis,
-                     event: str,
-                     expire_at: datetime,
-                     extras: dict):
-        """Creates a running timer and inserts it into the database.
-        
-        The extras dict has to be serialised into a string so that Postgres can store it."""
+		return cls(bot,
+			id=id,
+			event=event,
+			expire_at=expire_at,
+			extras=extras
+		)
 
-        async with postgres.acquire() as con:
-            query = """INSERT INTO timers (event, expire_at, extras)
-                       VALUES ($1, $2, $3)
-                       
-                       RETURNING id;"""
+	async def extend(self, seconds):
+		"""Extends a timer by the provided number of seconds."""
 
-            id = await con.fetchval(query,
-                                    event, expire_at, dumps(obj=extras))
+		new_time = self.expire_at + timedelta(seconds=seconds)
+		self.expire_at = new_time
 
-        return cls(artemis=artemis,
-                   id=id,
-                   event=event,
-                   expire_at=expire_at,
-                   extras=extras)
+		async with self.bot.postgres.acquire() as con:
+			query = """UPDATE timers SET expire_at = $1 WHERE id = $2;"""
+			await con.execute(query, new_time, self.id)
 
-    async def start(self):
-        """Starts the current timeout.
-        
-        If the timer expires, it dispatches an event with all of the extra data."""
+		self.bot.log.debug(f"Extended timer {self.id} to {new_time}.")
 
-        duration = (self.expire_at - datetime.utcnow()).total_seconds()
+	async def start(self):
+		"""Starts the current timeout.
+		
+		If the timer expires, it dispatches an event with all of the extra data."""
 
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # we can only sleep reliably for 48 days at a time,
-        # let's cap it at 45 just to be safe
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if duration >= 86400 * 45:
-            diff = duration - 86400 * 45
-            duration -= diff
-            await sleep(delay=diff)
+		past_expire = self.expire_at
+		duration = (past_expire - datetime.utcnow()).total_seconds()
 
-        await sleep(delay=duration)
+		# we can only sleep reliably for 48 days at a time, let's cap it at 45 just to be safe
+		if duration >= 86400 * 45:
+			diff = duration - 86400 * 45
+			duration -= diff
+			await sleep(diff)
 
-        if self.cancelled:
-            return
+		await sleep(duration)
 
-        await self.remove()
-        self.dispatch()
+		if self.cancelled:
+			return
 
-    async def cancel(self):
-        """This cancels the current task.
-        
-        It doesn't actually interrupt the timeout, it just wipes it from the database and prevents the event from being fired
-        if the timer ends."""
+		if past_expire != self.expire_at:
+			return await self.start()
 
-        console.debug(text=f"Timer {self.id} with event {EVENT_BASE.format(event=self.event)} has been cancelled.")
+		await self.remove()
+		self.dispatch()
 
-        self.cancelled = True
-        await self.remove()
+	async def cancel(self, remove_cache=True):
+		"""This cancels the current task.
+		
+		It doesn't actually interrupt the timeout, it just wipes it from the database and prevents the event from being fired
+		if the timer ends.
+		
+		If remove_cache is provided then the timer is removed from the Timer framework's list of existing timers."""
 
-    async def remove(self):
-        """This removes the timer from the database."""
+		self.bot.log.debug(f"Timer {self.id} with event {EVENT_BASE.format(self.event)} has been cancelled.")
 
-        async with postgres.acquire() as con:
-            query = """DELETE FROM timers
-                       WHERE id = $1;"""
+		if remove_cache:
+			self.bot.timer_backend.running_timers.remove(self)
 
-            await con.execute(query,
-                              self.id)
+		self.cancelled = True
+		await self.remove()
 
-    async def expire(self,
-                     force: Optional[bool] = False):
-        """Forces the timer to expire now and dispatch the event.
-        
-        This also runs cancel() to make sure it doesn't run again.
-        If force is provided, the event is dispatched even if the task was cancelled beforehand."""
+	async def remove(self):
+		"""This removes the timer from the database."""
 
-        if self.cancelled and not force:
-            return
+		async with self.bot.postgres.acquire() as con:
+			query = """DELETE FROM timers WHERE id = $1;"""
 
-        await self.cancel()
-        self.dispatch()
+			await con.execute(query, self.id)
 
-    def dispatch(self):
-        """Prematurely dispatches the event without touching cancellation or the database.
-        
-        This shouldn't really be called externally as it will lead to double responses."""
+	async def expire(self, force=False):
+		"""Forces the timer to expire now and dispatch the event.
+		
+		This also runs cancel() to make sure it doesn't run again.
+		If force is provided, the event is dispatched even if the task was cancelled beforehand."""
 
-        console.debug(f"Dispatched timer {self.id} with event {EVENT_BASE.format(event=self.event)}.")
+		if self.cancelled and not force:
+			return
 
-        self.artemis.dispatch(event_name=EVENT_BASE.format(event=self.event),
-                              **self.extras)
+		await self.cancel()
+		self.dispatch()
+
+	def dispatch(self):
+		"""Prematurely dispatches the event without touching cancellation or the database.
+		
+		This shouldn't really be called externally as it will lead to double responses."""
+
+		self.bot.log.debug(f"Dispatched timer {self.id} with event {EVENT_BASE.format(self.event)}.")
+		self.bot.dispatch(EVENT_BASE.format(self.event), **self.extras)
 
 
-class Backend(blueprint, commands.Cog, name="Timer Backend"):
-    """A backend designed to handle cross-restart timers for reminders and temp punishments."""
+class Plugin(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
+		self.running_timers = []
 
-    def __init__(self,
-                 artemis: Artemis):
-        self.artemis = artemis
-        self.running_timers = []
+	@commands.Cog.listener()
+	async def on_ready(self):
+		"""This handles the starting of every timer that remains in the database."""
 
-        self.artemis.timer_backend = self
+		async with self.bot.postgres.acquire() as con:
+			query = """SELECT id, event, expire_at, extras FROM timers;"""
+			timers = await con.fetch(query)
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        """This handles the starting of every timer that remains in the database."""
+		if not timers:
+			return self.bot.log.info("There were no timers that needed starting.")
 
-        async with postgres.acquire() as con:
-            query = """SELECT id, event, expire_at, extras
-                       FROM timers;"""
+		self.bot.log.info(f"Attempting to start {len(timers)} timers.")
+		for timer in timers:
+			new_timer = Timer(self.bot,
+				id=timer["id"],
+				event=timer["event"],
+				expire_at=timer["expire_at"],
+				extras=loads(timer["extras"])
+			)
 
-            timers = await con.fetch(query)
+			self.running_timers.append(new_timer)
+			self.bot.log.debug(f"Successfully started a timer for {EVENT_BASE.format(timer['event'])}")
 
-        if not timers:
-            return console.info("There were no timers that needed starting.")
+			self.bot.loop.create_task(new_timer.start())
 
-        console.debug(text=f"Attempting to start {len(timers)} timers.")
-        for timer in timers:
-            new_timer = Timer(artemis=self.artemis,
-                              id=timer["id"],
-                              event=timer["event"],
-                              expire_at=timer["expire_at"],
-                              extras=loads(timer["extras"]))
+		self.bot.log.info(f"Successfully started {len(self.running_timers)}/{len(timers)} timers.")
 
-            self.running_timers.append(new_timer)
-            console.debug(text=f"Successfully started a timer for {EVENT_BASE.format(event=timer['event'])}")
+	async def new(self, **timer_args):
+		"""Creates a new timer and adds it to the cog's cache."""
 
-            self.artemis.loop.create_task(new_timer.start())
+		new_timer = await Timer.create(self.bot,
+			event=timer_args.get("event"),
+			expire_at=timer_args.get("expire_at"),
+			extras=timer_args.get("extras")
+		)
 
-        console.info(text=f"Successfully started {len(self.running_timers)}/{len(timers)} timers.")
+		self.running_timers.append(new_timer)
+		self.bot.log.debug(f"Successfully started a timer for {EVENT_BASE.format(timer_args.get('event'))}")
+		self.bot.loop.create_task(new_timer.start())
 
-    async def create_new_timer(self,
-                               **timer_args: dict) -> Timer:
-        """Creates a new timer and adds it to the cog's cache."""
+		return new_timer
 
-        new_timer = await Timer.create(artemis=self.artemis,
-                                       event=timer_args.get("event"),
-                                       expire_at=timer_args.get("expire_at"),
-                                       extras=timer_args.get("extras"))
+	def get(self, event, query):
+		"""Searches for a running timer with a particular event by an extras value or ID."""
 
-        self.running_timers.append(new_timer)
-        console.debug(text=f"Successfully started a timer for {EVENT_BASE.format(event=timer_args.get('event'))}")
+		if isinstance(query, int):
+			return first(self.running_timers, lambda timer_set: timer_set.id == query and timer_set.event == event)
 
-        self.artemis.loop.create_task(new_timer.start())
+		return first(self.running_timers, lambda timer_set: all(item in timer_set.extras.items() for item in query.items()) and timer_set.event == event)
 
-        return new_timer
-
-    def get_running_timer(self,
-                          event: str,
-                          query: Union[int, dict]) -> Timer:
-        """Searches for a running timer with a particular event by an extras value or ID."""
-
-        if isinstance(query, int):
-            return utils.first(iterable=self.running_timers,
-                               condition=lambda timer_set: timer_set.id == query and timer_set.event == event)
-
-        return utils.first(iterable=self.running_timers,
-                           condition=lambda timer_set: all(item in timer_set.extras.items() for item in query.items()) and timer_set.event == event)
-
-
-LOCAL_COGS = [
-    Backend
-]
-
-def setup(artemis: Artemis):
-    for cog in LOCAL_COGS:
-        artemis.add_cog(cog=cog(artemis=artemis))
-        console.debug(text=f"Successfully loaded the {cog.__class__.__name__} cog.")
+def setup(bot):
+	ext.state.timer_handler = cog = Plugin(bot)
+	bot.add_cog(cog)

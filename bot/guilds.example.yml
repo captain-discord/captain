@@ -1,111 +1,107 @@
-# Role level presets:
-# ==========================
-# 100 - Administrator
-# > All commands
-# --------------------------
-# 90 - Moderator
-# > All moderation commands
-# --------------------------
-# 0 - Members
-# > Basic functionality
-# Use everyone if you don't
-# have/want a members role
-
-# Anti action enumerator
-# =======================
-# 0 - Ban
-# -----------------------
-# 1 - Kick
-# -----------------------
-# 2 - Mute
-# -----------------------
-# 3 - Warn
-# -----------------------
-# 4 - Purge/delete
-# -----------------------
-# Recommended: 2
-# Note: If mute role is
-# not configured, reverts
-# to warn
+# Action ID guide
+# ---------------
+# 1 = ban
+# 2 = mute
+# 3 = warn
+# 4 = do nothing
 
 123456789098765432: # server ID
-    moderation:
-        persistent_roles: 
-            enabled: true
-            whitelist:
-                - 123456789098765432
-
-        mute_role: 123456789098765432 # role ID (muted)
-
-        auto_roles: 
-            123456789098765432: # role ID (users)
-                - HUMAN
-                - BOT
-
-        lockdown:
-            locked_role: everyone
-            bypassed_roles:
-                - 123456789098765432 # role ID
-
-
-    anti:
-        spam:
-            enabled: true
-            action: 2
-
-            count: 5
-            threshold: 5
-
-            bypassed_roles:
-                - 123456789098765432 # role ID
-            bypassed_channels:
-                - 123456789098765432 # channel ID
-
-        pings:
-            enabled: true
-            action: 2
-
-            count: 10
-            threshold: 60
-
-            bypassed_roles:
-                - 123456789098765432 # role ID
-            bypassed_channels:
-                - 123456789098765432 # channel ID
-
-        invite:
-            enabled: true
-            action: 4
-
-            bypassed_roles: 
-                - 123456789098765432 # role ID
-            bypassed_channels:
-                - 123456789098765432 # channel ID
-            whitelist: 
-                - discord-testers 
-                - discord-events
-                - mila
-                - tokyoghoul
-
-    roles:
-        123456789098765432: # role ID (admin)
+    access_control:
+        123456789098765432: # role ID
             level: 100
-        123456789098765432: # role ID (mod)
-            level: 90
             overwrites:
-                lockdown: true
-        123456789098765432: # role ID (trial mod)
-            level: 90
-            overwrites:
-                ban: false
-                tempban: false
-                softban: false
-                unban: false
-        123456789098765432: # role ID (users)
+                ping: false # command name: true or false
+        everyone: # or role ID
             level: 0
 
-    channels:
-        123456789098765432: # channel ID
+    infractions:
+        mute_role: 123456789098765432 # role ID
+        ban_purge_days: 7
+
+    auto_roles: 
+        123456789098765432: # role ID
+            - HUMAN
+        123456789098765432: # role ID
+            - BOT
+
+    reaction_roles:
+        enabled: true
+        channel: 123456789098765432 # text channel ID
+        message: 123456789098765432 # message ID
+        roles:
+            123456789098765432: ✅ # role ID: unicode emoji or custom emoji (<:name:id>)
+
+    starboard:
+        enabled: true
+        emoji: ⭐ # unicode emoji or custom emoji (<:name:id>)
+        required_stars: 1
+        channel: 123456789098765432 # text channel ID
+
+        ignored_roles:
+            - 123456789098765432 # role ID
+        ignored_channels:
+            - 123456789098765432 # text channel ID
+
+    lockdown:
+        locked_role: everyone # or role ID
+        whitelist:
+            - 123456789098765432 # role ID
+
+    anti_spam:
+        enabled: true
+        action: 2
+        duration: 3600
+
+        count: 5
+        threshold: 5
+
+        ignored_roles:
+            - 123456789098765432 # role ID
+        ignored_channels: 
+            - 123456789098765432 # text channel ID
+
+    anti_ping_spam:
+        enabled: true
+        action: 2
+        duration: 3600
+
+        count: 10
+        threshold: 60
+
+        ignored_roles:
+            - 123456789098765432 # role ID
+        ignored_channels: 
+            - 123456789098765432 # text channel ID
+
+    anti_curse:
+        enabled: true
+        action: 2
+        duration: 3600
+
+        ignored_roles:
+            - 123456789098765432 # role ID
+        ignored_channels: 
+            - 123456789098765432 # text channel ID
+        blacklist: 
+            - nigga
+            - faggot
+
+    anti_invite:
+        enabled: true
+        action: 2
+        duration: 3600
+
+        ignored_roles:
+            - 123456789098765432 # role ID
+        ignored_channels: 
+            - 123456789098765432 # text channel ID
+        whitelist: 
+            - discord-developers
+            - discord-testers 
+            - discord-events
+
+    logs:
+        123456789098765432: # text channel ID
             - MEMBER_BAN
             - MEMBER_TEMPBAN
             - MEMBER_BAN_EXPIRE
@@ -115,6 +111,7 @@
             - MEMBER_KICK 
             
             - MEMBER_MUTE
+            - MEMBER_REMUTE
             - MEMBER_TEMPMUTE
             - MEMBER_MUTE_EXPIRE
             - MEMBER_UNMUTE
@@ -125,20 +122,20 @@
             - LOCKDOWN_TEMP
             - LOCKDOWN_EXPIRE
             - LOCKDOWN_CANCEL
-        123456789098765432: # channel ID
+        123456789098765432: # text channel ID
             - MEMBER_JOIN
             - MEMBER_LEAVE
-        123456789098765432: # channel ID
+        123456789098765432: # text channel ID
             - MESSAGE_EDIT
             - MESSAGE_DELETE
             - MESSAGE_BULK_DELETE
-        123456789098765432: # channel ID
-            - NICKNAME_ADD
-            - NICKNAME_CHANGE
-            - NICKNAME_REMOVE
-
-            - ROLE_CREATE
-            - ROLE_DELETE
-
-            - CHANNEL_CREATE
-            - CHANNEL_DELETE
+            
+    stat_counters:
+        123456789098765432: # voice channel ID
+            event: MEMBER_COUNT_CHANGE # BOT_COUNT_CHANGE, HUMAN_COUNT_CHANGE, NEWEST_BOT, NEWEST_HUMAN or NEWEST_MEMBER
+            format: "{value}"
+            
+    persistent_roles:
+        enabled: true
+        whitelist:
+            - 123456789098765432 # role ID

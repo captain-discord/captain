@@ -1,4 +1,6 @@
 base: "[`{at}`] {emoji} | {text}"
+dm_fail_base: "[`{at}`] ❓ | I couldn't notify {target} (`{target.id}`) about their {infraction}."
+
 time_format: "%H:%M:%S"
 
 # ================
@@ -6,58 +8,80 @@ time_format: "%H:%M:%S"
 # ================
 MEMBER_BAN:
     emoji: 🚪
+    infraction: ban
 
-    text: "[`#{case}`] | {user} (`{user.id}`) has been banned by {actor} (`{actor.id}`) for `{reason}`"
+    text: "[`#{case}`] | {target} (`{target.id}`) has been banned by {actor} (`{actor.id}`) for `{reason}`"
+    dm: "[`#{case}`] | You have been banned by {actor} (`{actor.id}`) in {guild} for `{reason}`"
 
 MEMBER_TEMPBAN:
     emoji: 🚪
+    infraction: tempban
 
-    text: "[`#{case}`] | {user} (`{user.id}`) has been banned by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+    text: "[`#{case}`] | {target} (`{target.id}`) has been banned by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+    dm: "[`#{case}`] | You have been banned from {guild} by {actor} (`{actor.id}`) for {duration} for `{reason}`"
 
 MEMBER_BAN_EXPIRE:
     emoji: 😇
+    infraction: expired ban
 
-    text: "{user} (`{user.id}`) has been automatically unbanned because their tempban (`#{case}`) expired."
-
-MEMBER_SOFTBAN:
-    emoji: 🚪
-
-    text: "[`#{case}`] | {user} (`{user.id}`) has been softbanned by {actor} (`{actor.id}`) for `{reason}`"
+    text: "{target} (`{target.id}`) has been automatically unbanned because their tempban (`#{case}`) expired."
+    dm: "You have been automatically unbanned from {guild} because your tempban (`#{case}`) expired."
 
 MEMBER_UNBAN:
     emoji: 😇
+    infraction: unban
 
-    text: "{user} (`{user.id}`) has been unbanned by {actor} (`{actor.id}`)."
+    text: "{target} (`{target.id}`) has been unbanned by {actor} (`{actor.id}`)."
+    dm: "You have been unbanned from {guild} by {actor} (`{actor.id}`)."
 
 MEMBER_KICK:
     emoji: 👢
+    infraction: kick
 
-    text: "[`#{case}`] | {user} (`{user.id}`) has been kicked by {actor} (`{actor.id}`) for `{reason}`"
+    text: "[`#{case}`] | {target} (`{target.id}`) has been kicked by {actor} (`{actor.id}`) for `{reason}`"
+    dm: "[`#{case}`] | You have been kicked from {guild} by {actor} (`{actor.id}`) for `{reason}`"
     
 MEMBER_MUTE:
     emoji: 😶
+    infraction: mute
 
-    text: "[`#{case}`] | {user} (`{user.id}`) has been muted by {actor} (`{actor.id}`) for `{reason}`"
+    text: "[`#{case}`] | {target} (`{target.id}`) has been muted by {actor} (`{actor.id}`) for `{reason}`"
+    dm: "[`#{case}`] | You have been muted in {guild} by {actor} (`{actor.id}`) for `{reason}`"
+
+MEMBER_REMUTE:
+    emoji: ❗
+    infraction: remute
+
+    text: "{target} (`{target.id}`) has been automatically re-muted because they re-joined before their mute expired."
+    dm: "You have been automatically re-muted in {guild} because you re-joined before your mute expired."
 
 MEMBER_TEMPMUTE:
     emoji: 😶
+    infraction: tempmute
 
-    text: "[`#{case}`] | {user} (`{user.id}`) has been muted by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+    text: "[`#{case}`] | {target} (`{target.id}`) has been muted by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+    dm: "[`#{case}`] | You have been muted in {guild} by {actor} (`{actor.id}`) for {duration} for `{reason}`"
 
 MEMBER_MUTE_EXPIRE:
     emoji: 😲
+    infraction: expired mute
 
-    text: "{user} (`{user.id}`) has been automatically unmuted because their tempmute (`#{case}`) expired."
+    text: "{target} (`{target.id}`) has been automatically unmuted because their tempmute (`#{case}`) expired."
+    dm: "You have been automatically unmuted in {guild} because your tempmute (`#{case}`) expired."
 
 MEMBER_UNMUTE:
     emoji: 😲
+    infraction: unmute
 
-    text: "{user} (`{user.id}`) has been unmuted by {actor} (`{actor.id}`)."
+    text: "{target} (`{target.id}`) has been unmuted by {actor} (`{actor.id}`)."
+    dm: "You have been unmuted in {guild} by {actor} (`{actor.id}`)."
 
 MEMBER_WARN:
     emoji: ⚠️
+    infraction: warning
 
-    text: "[`#{case}`] | {user} (`{user.id}`) has been warned by {actor} (`{actor.id}`) for `{reason}`"
+    text: "[`#{case}`] | {target} (`{target.id}`) has been warned by {actor} (`{actor.id}`) for `{reason}`"
+    dm: "[`#{case}`] | You have been warned in {guild} by {actor} (`{actor.id}`) for `{reason}`"
 
 # ======================
 # Locking down a channel
@@ -142,14 +166,14 @@ CHANNEL_DELETE:
 NICKNAME_ADD:
     emoji: 📛
 
-    text: "{user} (`{user.id}`) set their nickname to `{nick}`."
+    text: "{target} (`{target.id}`) set their nickname to `{nick}`."
 
 NICKNAME_CHANGE:
     emoji: 📛
 
-    text: "{user} (`{user.id}`) changed their nickname from `{before}` to `{after}`."
+    text: "{target} (`{target.id}`) changed their nickname from `{before}` to `{after}`."
 
 NICKNAME_REMOVE:
     emoji: 📛
 
-    text: "{user} (`{user.id}`) removed their nickname `{nick}`."
+    text: "{target} (`{target.id}`) removed their nickname `{nick}`."

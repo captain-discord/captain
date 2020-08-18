@@ -1,48 +1,4 @@
-token: no-token.4.u
-  
-website: https://artemis.jacktek.net
-
-message_cache: 100000
-owners:
-  - 123456789098765432
-
-figlet:
-  start: Artemis
-  stop: Goodbye
-
-  width: 80
-  font: standard
-
-logging:
-  log_level: DEBUG
-  project_name: artemis
-
-prefix:
-  default: "-"
-  aliases:
-    - artemis.
-  mention: true
-
-presence:
-  name: out for raiders
-  type: WATCHING
-  status: online
-
-  send_every: 300
-
-version:
-  major: 1
-  minor: 0
-  patch: 0
-  release: stable
-
-postgres:
-  host: 127.0.0.1
-  port: 5432
-
-  user: someuser
-  password: youshallnotpass
-  database: artemis
+postgres: postgres://someuser:youshallnotpass@127.0.0.1:5432/captain
 
 redis:
   host: 127.0.0.1
@@ -50,7 +6,3 @@ redis:
 
   password: youshallnotpass
   database: 0
-
-archive:
-  endpoint: /api/archive
-  token: youshallnotpass

@@ -1,240 +1,316 @@
-# Copyright (C) JackTEK 2018-2020
-# -------------------------------
+import base64, discord, html, re
 
-# =====================
-# Import PATH libraries
-# =====================
-# ------------
-# Type imports
-# ------------
-from bot import Artemis
-from typing import Any, List, Optional, Union
-
-
-# --------------------
-# Builtin dependencies
-# --------------------
 from datetime import datetime
-
-# ------------------------
-# Third-party dependencies
-# ------------------------
-import discord
-
-from aiohttp import ClientSession
 from discord.ext import commands
+from ext.utils import bytes_4_humans, identifier
+from os import remove
 
-# -------------------------
-# Local extension libraries
-# -------------------------
-import util.utilities as utils
+from ext.exceptions import MissingSubcommand
+from ext.state import access_control
 
-from custos import blueprint
+# the majority of this function was "borrowed" from kyb3r's modmail logviewer
+# https://github.com/kyb3r/logviewer/blob/master/core/formatter.py
+def format_content_html(content, allow_links=False):
+	def encode_codeblock(m):
+		encoded = base64.b64encode(m.group(1).encode()).decode()
 
-from util import console
-from util.constants import config, emojis
-from util.exceptions import ArtemisException, UserNotFound
+		return f"\x1AM{encoded}\x1AM"
 
+	# Encode multiline codeblocks (```text```)
+	content = re.sub(r"```+((?:[^`]*?\n)?(?:[^`]+))\n?```+", encode_codeblock, content)
+	content = html.escape(content)
 
-async def upload_archive(author_id: int,
-                         guild_id: int,
-                         messages: List[discord.Message]) -> str:
-    """Uploads an archive to the archive API and returns the URL.
-    
-    If the server returns an errored response, an exception is raised."""
+	def encode_inline_codeblock(m):
+		encoded = base64.b64encode(m.group(1).encode()).decode()
 
-    payload = {
-        "author_id": author_id,
-        "guild_id": guild_id,
-        "messages": []
-    }
+		return f"\x1AI{encoded}\x1AI"
 
-    for message in messages:
-        payload["messages"].append({
-            "content": message.content,
-            "attachment": message.attachments[0].url if message.attachments else "",
-            "embed": message.embeds[0].to_dict() if message.embeds else None,
-            
-            "message": message.id,
-            "channel": message.channel.id,
-            "author": message.author.id,
-            "username": str(message.author),
+	# Encode inline codeblocks (`text`)
+	content = re.sub(r"`([^`]+)`", encode_inline_codeblock, content)
 
-            "timestamp": message.created_at.strftime("%Y-%m-%d %H:%M:%S.%f")
-        })
+	# Encode links
+	if allow_links:
+		def encode_link(m):
+			encoded_1 = base64.b64encode(m.group(1).encode()).decode()
+			encoded_2 = base64.b64encode(m.group(2).encode()).decode()
 
-    async with ClientSession() as session:
-        async with session.post(url=config.website + config.archive.endpoint,
-                                headers={
-                                    "Authorization": config.archive.token
-                                },
-                                json=payload) as res:
-            if 200 <= res.status < 300:
-                key = await res.json()
-                return f"{config.website}{config.archive.endpoint}/{key['key']}?view=webpage"
+			return f"\x1AL{encoded_1}|{encoded_2}\x1AL"
 
-            else:
-                raise Exceptions.ArchiveFailed(code=res.status)
+		content = re.sub(r"\[(.*?)\]\((.*?)\)", encode_link, content)
 
+	def encode_url(m):
+		encoded = base64.b64encode(m.group(1).encode()).decode()
 
-class Commands(blueprint, commands.Cog, name="Archive Commands"):
-    """Archiving messages allows server Staff to save logs of messages from bad actors and co."""
+		return f"\x1AU{encoded}\x1AU"
 
-    MAX_MESSAGES = 1000
+	# Encode URLs
+	content = re.sub(r"(\b(?:(?:https?|ftp|file)://|www\.|ftp\.)(?:\([-a-zA-Z0-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-zA-Z0-9+&@#/%?=~_|!:,\.\[\];])*(?:\([-a-zA-Z0-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-zA-Z0-9+&@#/%=~_|$]))", encode_url, content)
 
-    def __init__(self,
-                 artemis: Artemis):
-        self.artemis = artemis
+	# Process bold (**text**)
+	content = re.sub(r"(\*\*)(?=\S)(.+?[*_]*)(?<=\S)\1", r"<b>\2</b>", content)
 
-    @commands.group(name="archive",
-                    usage="archive <subcommand:text>",
-                    invoke_without_command=True)
-    async def archive(self,
-                      ctx: commands.Context):
-        """Saves a list of messages to a special API for use later."""
+	# Process underline (__text__)
+	content = re.sub(r"(__)(?=\S)(.+?)(?<=\S)\1", r"<u>\2</u>", content)
 
-        await ctx.send(content=f"🚫 You're missing a subcommand, use **{config.prefix.default}help archive** for help.")
+	# Process italic (*text* or _text_)
+	content = re.sub(r"(\*|_)(?=\S)(.+?)(?<=\S)\1", r"<i>\2</i>", content)
 
-    @archive.command(name="here",
-                     usage="archive here <amount:num>")
-    async def archive_here(self,  
-                           ctx: commands.Context,
-                           amount: int):
-        """Archives an amount of messages in the current channel."""
+	# Process strike through (~~text~~)
+	content = re.sub(r"(~~)(?=\S)(.+?)(?<=\S)\1", r"<s>\2</s>", content)
 
-        if not 1 < amount <= self.MAX_MESSAGES:
-            raise Exceptions.ImproperMessageCount(provided=amount)
+	def decode_inline_codeblock(m):
+		decoded = base64.b64decode(m.group(1).encode()).decode()
 
-        messages = await ctx.channel.history(limit=amount).flatten()
-        messages.reverse()
+		return f"<span class='inline-codeblock'>{decoded}</span>"
 
-        url = await upload_archive(author_id=ctx.author.id,
-                                   guild_id=ctx.guild.id,
-                                   messages=messages)
+	# Decode and process inline codeblocks
+	content = re.sub(r"\x1AI(.*?)\x1AI", decode_inline_codeblock, content)
 
-        await ctx.send(content=f"{emojis.tick_yes} {len(messages)} messages have been archived at:\n{url}")
+	# Decode and process links
+	if allow_links:
+		def decode_link(m):
+			encoded_1 = base64.b64decode(m.group(1).encode()).decode()
+			encoded_2 = base64.b64decode(m.group(2).encode()).decode()
 
-    @archive.command(name="user",
-                     usage="archive user <target:user> <amount:num>")
-    async def archive_user(self,  
-                           ctx: commands.Context,
-                           target: Union[discord.Member, discord.User, int],
-                           amount: int,):
-        """Archives an amount of messages in the current channel that were sent by a user."""
+			return f"<a href='{encoded_2}'>{encoded_1}</a>"
 
-        if not 1 < amount <= self.MAX_MESSAGES:
-            raise Exceptions.ImproperMessageCount(provided=amount)
+		# Potential bug, may need to change to: '\x1AL(.*?)\|(.*?)\x1AL'
+		content = re.sub(r"\x1AL(.*?)\|(.*?)\x1AL", decode_link, content)
 
-        if not isinstance(target, (discord.Member, discord.User)):
-            target_id = utils.intable(obj=target)
-            target = await self.artemis.fetch_user(user_id=target_id)
+	def decode_url(m):
+		decoded = base64.b64decode(m.group(1).encode()).decode()
 
-            if not target_id or target is None:
-                raise UserNotFound(query=target)
+		return f"<a class='link' href='{decoded}'>{decoded}</a>"
 
-        messages = await ctx.channel.history(limit=amount,
-                                             check=lambda m: m.author == target).flatten()
-        messages.reverse()
+	# Decode and process URLs
+	content = re.sub("\x1AU(.*?)\x1AU", decode_url, content)
 
-        url = await upload_archive(author_id=ctx.author.id,
-                                   guild_id=ctx.guild.id,
-                                   messages=messages)
+	# Process new lines
+	content = content.replace("\n", "<br>")
 
-        await ctx.send(content=f"{emojis.tick_yes} {len(messages)} messages have been archived at:\n{url}")
+	def decode_codeblock(m):
+		decoded = base64.b64decode(m.group(1).encode()).decode()
+		match = re.match(r"^([^`]*?\n)?([^`]+)$", decoded)
 
-    @archive.command(name="channel",
-                     usage="archive channel <target:channel> <amount:num>")
-    async def archive_channel(self,  
-                              ctx: commands.Context,
-                              target: discord.TextChannel,
-                              amount: int,):
-        """Archives an amount of messages in the specified channel."""
+		result = html.escape(match.group(2))
+		return f"<div class='codeblock'>{result}</div>"
 
-        if not 1 < amount <= self.MAX_MESSAGES:
-            raise Exceptions.ImproperMessageCount(provided=amount)
+	# Decode and process multiline codeblocks
+	content = re.sub("\x1AM(.*?)\x1AM", decode_codeblock, content)
 
-        messages = await target.history(limit=amount).flatten()
-        messages.reverse()
+	# Meta mentions (@everyone and @here)
+	content = content.replace("@everyone", "<span class='mention'>@everyone</span>")
+	content = content.replace("@here", "<span class='mention'>@here</span>")
 
-        url = await upload_archive(author_id=ctx.author.id,
-                                   guild_id=ctx.guild.id,
-                                   messages=messages)
+	# User mentions (<@id> and <@!id>)
+	content = re.sub(r"(&lt;@!?(\d+)&gt;)", r"<span class='mention'>\1</span>", content)
 
-        await ctx.send(content=f"{emojis.tick_yes} {len(messages)} messages have been archived at:\n{url}")
+	# Channel mentions (<#id>)
+	content = re.sub(r"(&lt;#\d+&gt;)", r"<span class='mention'>\1</span>", content)
 
-    @archive.command(name="bots",
-                     usage="archive bots <amount:num> [target:channel]")
-    async def archive_bots(self,  
-                           ctx: commands.Context,
-                           amount: int,
-                           target: Optional[discord.TextChannel] = None):
-        """Archives an amount of messages sent by bots in the current or specified channel."""
+	# Role mentions (<@&id>)
+	content = re.sub(r"(&lt;@&amp;(\d+)&gt;)", r"<span class='mention'>\1</span>", content)
 
-        if not 1 < amount <= self.MAX_MESSAGES:
-            raise Exceptions.ImproperMessageCount(provided=amount)
+	# Custom emojis (<:name:id>)
+	content = re.sub(r"&lt;(:.*?:)(\d*)&gt;", r"<img class='emoji' src='https://cdn.discordapp.com/emojis/\2.png'>", content)
 
-        target = target or ctx.channel
+	# Custom animated emojis (<a:name:id>)
+	content = re.sub(r"&lt;(a:.*?:)(\d*)&gt;", r"<img class='emoji' src='https://cdn.discordapp.com/emojis/\2.gif'>", content)
 
-        messages = await target.history(limit=amount,
-                                        check=lambda m: m.author.bot).flatten()
-        messages.reverse()
+	return content
 
-        url = await upload_archive(author_id=ctx.author.id,
-                                   guild_id=ctx.guild.id,
-                                   messages=messages)
+def encode(text):
+	as_bytes = text.encode("utf-8")
+	as_b64_bytes = base64.b64encode(as_bytes)
+	return as_b64_bytes.decode("utf-8")
 
-        await ctx.send(content=f"{emojis.tick_yes} {len(messages)} messages have been archived at:\n{url}")
+class Plugin(commands.Cog, name="Message Archiving"):
+	"""Should you need to keep a record of messages that were sent but also need to clear them from chat, you can use these commands to create a file and save it for later.
 
+	By default, each archive file is a `.html` file meaning it looks like a web page (i.e. you can open it in your browser). However, you'll also find a big download button near the top that allows you to save a copy of the messages in a plain .txt file as well."""
 
-class Exceptions(blueprint, commands.Cog, name="Archive Exceptions"):
-    """This is a collection of exceptions raised only in this file.
-    
-    This cog also comes equipped with its own command error listener."""
+	def __init__(self, bot):
+		self.bot = bot
 
-    def __init__(self,
-                 artemis: Artemis):
-        self.artemis = artemis
+	@commands.group("archive",
+		usage="archive",
+		invoke_without_command=True
+	)
+	async def archive(self, ctx):
+		"""The entrypoint to message archiving."""
 
+		raise MissingSubcommand()
 
-    class ImproperMessageCount(ArtemisException):
-        def __init__(self,
-                     provided: int):
-            self.provided = provided
+	@access_control.require(access_control.Level.MOD)
+	@archive.command("here",
+		usage="archive here <amount:num>"
+	)
+	async def archive_here(self, ctx, 
+		amount: int
+	):
+		"""Creates an archive using messages from the current channel."""
 
-    
-    class ArchiveFailed(ArtemisException):
-        def __init__(self,
-                     code: int):
-            self.code = code
+		messages = await ctx.channel.history(limit=amount).flatten()
+		messages.reverse()
 
-            console.error(text=f"Failed to upload to archive API with code {code}.")
+		await self.create_archive(ctx, f"{len(messages)} messages have been archived.", messages)
 
-    
-    @commands.Cog.listener()
-    async def on_command_error(self,
-                               ctx: commands.Context,
-                               error: Any):
-        """This handles the error responses for when exceptions listed in this cog are raised."""
-    
-        if isinstance(error, commands.CommandInvokeError):
-            if isinstance(error.original, self.ArchiveFailed):
-                return await ctx.send(content=f"🚫 Failed to contact archiving server. Check the logs.")
+	@access_control.require(access_control.Level.MOD)
+	@archive.command("user",
+		usage="archive user <target:user> <amount:num>"
+	)
+	async def archive_user(self, ctx, 
+		target: discord.Member, 
+		amount: int
+	):
+		"""Allows for an archive to be created using messages only sent by the provided user in the current channel."""
 
-            if isinstance(error.original, self.ImproperMessageCount):
-                if error.original.provided > 1:
-                    return await ctx.send(content=f"🚫 You're trying to archive too many messages.")
+		messages = await ctx.channel.history(
+			limit=amount,
+			check=lambda m: m.author == target
+		).flatten()
+		messages.reverse()
 
-                else:
-                    return await ctx.send(content=f"🚫 Pick a number higher than one.")
+		await self.create_archive(ctx, f"{len(messages)} messages have been archived.", messages)
 
+	@access_control.require(access_control.Level.MOD)
+	@archive.command("channel",
+		usage="archive channel <target:channel> <amount:num>"
+	)
+	async def archive_channel(self, ctx, 
+		target: discord.TextChannel, 
+		amount: int
+	):
+		"""Makes an archive with messages from the provided channel rather than the current one."""
 
-LOCAL_COGS = [
-    Commands,
-    Exceptions
-]
+		messages = await target.history(limit=amount).flatten()
+		messages.reverse()
 
+		await self.create_archive(ctx, f"{len(messages)} messages have been archived.", messages)
 
-def setup(artemis: Artemis):
-    for cog in LOCAL_COGS:
-        artemis.add_cog(cog=cog(artemis=artemis))
-        console.debug(text=f"Successfully loaded the {cog.__class__.__name__} cog.")
+	@access_control.require(access_control.Level.MOD)
+	@archive.command("bots",
+		usage="archive bots <amount:num> [target:channel]"
+	)
+	async def archive_bots(self, ctx, 
+		amount: int, 
+		target: discord.TextChannel = None
+	):
+		"""Archives messages that were only sent by bot accounts in the current or provided channel."""
+
+		target = target or ctx.channel
+
+		messages = await ctx.channel.history(
+			limit=amount,
+			check=lambda m: m.author.bot
+		).flatten()
+		messages.reverse()
+
+		await self.create_archive(ctx, f"{len(messages)} messages have been archived.", messages)
+
+	async def create_archive(self, ctx, content, messages):
+		async with self.bot.postgres.acquire() as con:
+			query = """INSERT INTO message_archives (key) VALUES ($1) RETURNING id;"""
+
+			key = identifier("%A%A%A%A-%A%A%A%A-%A%A%A%A")
+			id = await con.fetchval(query, key)
+
+		with open(f"buffer-archive:{key}.html", "w", encoding="utf-8") as file:
+			file.write(self.make_html(ctx, id, messages))
+
+		msg = await ctx.send(content,
+			file=discord.File(f"buffer-archive:{key}.html",
+				filename=f"Archive_{key}.html"
+			)
+		)
+		
+		remove(f"buffer-archive:{key}.html")
+
+		async with self.bot.postgres.acquire() as con:
+			query = """UPDATE message_archives SET cdn_url = $1 WHERE id = $2;"""
+
+			await con.execute(query, msg.attachments[0].url, id)
+
+	def make_html(self, ctx, id, messages):
+		TIMESTAMP_FORMAT = "%d/%m/%y at %H:%M"
+		RAW_TIMESTAMP_FORMAT = "%d-%m-%y %H:%M"
+
+		IMAGE_EXTENSIONS = ".png", ".jpg", ".jpeg", ".webp", ".svg"
+
+		message_string = ""
+		raw_text = ""
+
+		for m in messages:
+			if not m.content and not m.attachments:
+				continue
+
+			attachments = ""
+
+			for a in m.attachments:
+				if a.url.endswith(IMAGE_EXTENSIONS):
+					attachments += f"<a href='{a.url}'><img class='archive-attachment' src='{a.url}'></a>"
+
+				else:
+					attachments += f"<div class='archive-attachment-box'><a href='{a.url}' class='archive-attachment-name'>{a.filename}</a><p class='archive-attachment-size'>{bytes_4_humans(a.size)}</p></div>"
+
+			message_string += f"""
+				<div class="archive-entry">
+					<span class="archive-username">{m.author}</span>
+					<span class="archive-timestamp">{m.created_at.strftime(TIMESTAMP_FORMAT)}</span>
+					<p>{format_content_html(m.content, True)}</p>
+					{attachments}
+				</div>
+			"""
+
+			raw_text += f"{m.created_at.strftime(RAW_TIMESTAMP_FORMAT)} ({ctx.guild.id} / {m.channel.id} / {m.author.id} / {m.id}) {m.author}: {m.clean_content}\n"
+
+		return f"""
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+				<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+				<meta name="viewport" content="width=device-width,initial-scale=1">
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				<title>Archive #{id}</title>
+
+				<style>
+					@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,400i,700");
+					body {{background-color: rgb(54, 57, 63);color: white;margin: 50px;font-family: Nunito;}}
+					hr {{background-color: rgb(64, 68, 75);height: 1px;border: none;}}
+					.archive-attachment {{max-width: 400px;height: auto;border-radius: 4px;}}
+					.archive-attachment-size {{margin: 0;font-size: 12px;color: #72767d;font-weight: 300;}}
+					.archive-attachment-name {{font-size: 16px;}}
+					.link, .archive-attachment-name {{color: rgb(0, 176, 244);text-decoration: none;}}
+					.link:hover, .archive-attachment-name:hover {{text-decoration: underline;}}
+					.archive-title {{font-size: 70px;display: inline;}}
+					.archive-entries {{padding-top: 20px;}}
+					.mention {{background-color: rgba(115, 139, 215, 0.1);color: #7289da;}}
+					.codeblock, .archive-attachment-box {{max-width: 400px;padding: 10px;margin-bottom: 16px;background-color: rgb(47, 49, 54);border: 1px solid rgb(41, 43, 47);border-radius: 5px;color: rgb(185, 187, 190);}}
+					.codeblock-inline {{font-family: Menlo, Consolas, Monaco, monospace;font-size: 14px;line-height: 16px;padding: 2px;border-radius: 3px;background-color: #23272A;}}
+					.emoji {{height: 25px;width: 25px;vertical-align:middle;}}
+					p, .archive-username {{font-size: 16px;}}
+					p, .codeblock {{white-space: pre-wrap;vertical-align:middle;}}
+					.archive-username {{color: #7289DA;}}
+					.archive-timestamp {{font-size: 12px;color: rgb(114, 118, 125);margin-left: 10px;padding-bottom: 20px;}}
+					.archive-download {{font-size: 35px;color: #7289DA;display: inline;margin-left: 10px;}}
+					@media screen and (max-width: 480px) {{.archive-attachment {{max-width: calc(100vw - 50px) !important;}}.embed-image {{max-width: calc(100vw - 124px) !important;}}}}
+				</style>
+			</head>
+			<body>
+				<h2 class="archive-title">Archive #{id}</h2>
+				<a class="archive-download" id="download-button" href="data:text/plain;charset=utf-8;base64,{encode(raw_text)}" download="Archive_{id}.txt">
+					<i class="fas fa-download"></i>
+				</a>
+				<p class="archive-timestamp">Created by {ctx.author} at {datetime.utcnow().strftime(TIMESTAMP_FORMAT)}</p>
+				<hr>
+
+				<div class="archive-entries">
+					{message_string}
+				</div>
+			</body>
+			</html>
+		"""
+
+def setup(bot):
+	bot.add_cog(Plugin(bot))

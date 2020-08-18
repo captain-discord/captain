@@ -1,262 +1,181 @@
-# Copyright (C) JackTEK 2018-2020
-# -------------------------------
-
-# =====================
-# Import PATH libraries
-# =====================
-# ------------
-# Type imports
-# ------------
-from bot import Artemis
-from typing import Any, Union
-
-
-# --------------------
-# Builtin dependencies
-# --------------------
-from datetime import datetime
-
-# ------------------------
-# Third-party dependencies
-# ------------------------
 import discord
 
+from datetime import datetime
 from discord.ext import commands
-
-# -------------------------
-# Local extension libraries
-# -------------------------
-import util.utilities as utils
-
-from custos import blueprint
-
-from util import console
-from util.constants import actions, guilds
+from ext.utils import ordinal_indicator, time_since
 
 
-class Listeners(blueprint, commands.Cog, name="Logging Listeners"):
-    """These listeners add functionality to logging and use the resources in actions.yml."""
+class Handler:
+	def __init__(self, bot, guild):
+		self.bot = bot
+		self.guild = guild
 
-    def __init__(self,
-                 artemis: Artemis):
-        self.artemis = artemis
+		if isinstance(guild, int):
+			self.guild = bot.get_guild(guild)
 
-    @commands.Cog.listener()
-    async def on_message_edit(self,
-                              before: discord.Message,
-                              after: discord.Message):
-        """Handles logging for edited messages."""
+		self.logs = {self.guild.get_channel(cid): e for cid, e in bot.guilds.get(self.guild.id).get("logs", {}).items()}
 
-        if not guilds.get(after.guild.id, {}) or after.content == before.content:
-            return
-        
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=after.guild,
-                              action="MESSAGE_EDIT",
-                              
-                              before=before,
-                              after=after)
+	def dm_fail_format(self, event, target):
+		base = self.bot.actions.get("dm_fail_base")
+		infr_name = self.bot.actions.get(event, {}).get("infraction", "???")
 
-    @commands.Cog.listener()
-    async def on_message_delete(self,
-                                message: discord.Message):
-        """Handles logging for deleted messages."""
+		return base.format(
+			at=datetime.utcnow().strftime(self.bot.actions.get("time_format")),
+			target=target,
+			infraction=infr_name
+		)
 
-        if not guilds.get(message.guild.id, {}) or not message.content:
-            return
-        
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=message.guild,
-                              action="MESSAGE_DELETE",
-                              
-                              message=message)
+	def dm_format(self, event, **options):
+		base = self.bot.actions.get("base")
+		dm_base = self.bot.actions.get(event, {}).get("dm")
 
-    @commands.Cog.listener()
-    async def on_raw_bulk_message_delete(self,
-                                         payload: discord.RawBulkMessageDeleteEvent):
-        """Handles logging for purged messages."""
+		return base.format(
+			at=datetime.utcnow().strftime(self.bot.actions.get("time_format")),
+			emoji=self.bot.actions.get(event, {}).get("emoji"),
+			text=dm_base.format(
+				guild=self.guild,
+				**options
+			)
+		)
 
-        channel = self.artemis.get_channel(id=payload.channel_id)       
+	def log_format(self, event, **options):
+		base = self.bot.actions.get("base")
+		log_base = self.bot.actions.get(event, {}).get("text")
 
-        if not guilds.get(channel.guild.id, {}):
-            return
-        
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=channel.guild,
-                              action="MESSAGE_BULK_DELETE",
-                              
-                              amount=len(payload.message_ids),
-                              channel=channel)
-        
-    @commands.Cog.listener()
-    async def on_member_join(self,
-                             member: discord.Member):
-        """Handles logging for new members."""
+		return base.format(
+			at=datetime.utcnow().strftime(self.bot.actions.get("time_format")),
+			emoji=self.bot.actions.get(event, {}).get("emoji"),
+			text=log_base.format(**options)
+		)
 
-        if not guilds.get(member.guild.id, {}):
-            return
-        
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=member.guild,
-                              action="MEMBER_JOIN",
-                              
-                              user=member,
-                              ordinal=utils.ordinal_indicator(num=member.guild.member_count + 1))
+	async def dispatch(self, event, user_to_dm=None, **options):
+		logs = [c for c, e in self.logs.items() if event in e]
+		failed_to_dm = False
 
-    @commands.Cog.listener()
-    async def on_member_remove(self,
-                               member: discord.Member):
-        """Handles logging for members that have left."""
+		if user_to_dm is not None:
+			if user_to_dm.bot:
+				failed_to_dm = True
 
-        if not guilds.get(member.guild.id, {}):
-            return
-        
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=member.guild,
-                              action="MEMBER_LEAVE",
-                              
-                              user=member,
-                              joined_ago=utils.time_since(since=member.joined_at,
-                                                          ms=False,
-                                                          granularity=2,
-                                                          pretty=True,
-                                                          skip_empty=True))
+			else:
+				try:
+					await user_to_dm.send(self.dm_format(event, **options))
 
-    @commands.Cog.listener(name="on_guild_channel_delete")
-    @commands.Cog.listener(name="on_guild_role_delete")
-    async def channel_or_role_delete(self,
-                                     channel_or_role: Union[discord.abc.GuildChannel, discord.Role]):
-        """Handles logging of channel/role deletion.
-        
-        If this triggers for a channel, the event takes into account the type of the channel (text/voice/category) and notes it in the log."""
+				except:
+					failed_to_dm = True
 
-        if not guilds.get(channel_or_role.guild.id, {}):
-            return
+		for log in logs:
+			if log is None:
+				continue
 
-        if isinstance(channel_or_role, discord.Role):
-            action = "ROLE_DELETE"
-            kwargs = {"role": channel_or_role}
+			await log.send(self.log_format(event, **options))
+			if failed_to_dm:
+				await log.send(self.dm_fail_format(event, user_to_dm))
 
-        else:
-            action = "CHANNEL_DELETE"
-            kwargs = {"channel": channel_or_role}
+class Plugin(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
 
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=channel_or_role.guild,
-                              action=action,
-                              
-                              **kwargs)
+	@commands.Cog.listener()
+	async def on_message_edit(self, before, after):
+		if after.content == before.content:
+			return
+		
+		await Handler(self.bot, after.guild).dispatch("MESSAGE_EDIT",
+			before=before,
+			after=after
+		)
 
-    @commands.Cog.listener(name="on_guild_channel_create")
-    @commands.Cog.listener(name="on_guild_role_create")
-    async def channel_or_role_create(self,
-                                     channel_or_role: Union[discord.abc.GuildChannel, discord.Role]):
-        """Handles logging of channel/role creation.
-        
-        If this triggers for a channel, the event takes into account the type of the channel (text/voice/category) and notes it in the log."""
+	@commands.Cog.listener()
+	async def on_message_delete(self, message):
+		if not message.content:
+			return
+		
+		await Handler(self.bot, message.guild).dispatch("MESSAGE_DELETE",
+			message=message
+		)
 
-        if not guilds.get(channel_or_role.guild.id, {}):
-            return
+	@commands.Cog.listener()
+	async def on_raw_bulk_message_delete(self, payload):
+		await Handler(self.bot, payload.guild_id).dispatch("MESSAGE_BULK_DELETE",
+			amount=len(payload.message_ids),
+			channel=self.bot.get_channel(payload.channel_id)
+		)
+	
+	@commands.Cog.listener()
+	async def on_member_join(self, member):
+		await Handler(self.bot, member.guild).dispatch("MEMBER_JOIN",
+			user=member,
+			ordinal=ordinal_indicator(member.guild.member_count)
+		)
 
-        if isinstance(channel_or_role, discord.Role):
-            action = "ROLE_CREATE"
-            kwargs = {"role": channel_or_role}
+	@commands.Cog.listener()
+	async def on_member_remove(self, member):
+		await Handler(self.bot, member.guild).dispatch("MEMBER_LEAVE",
+			user=member,
+			joined_ago=time_since(since=member.joined_at)
+		)
 
-        else:
-            action = "CHANNEL_CREATE"
-            kwargs = {"channel": channel_or_role}
+	@commands.Cog.listener("on_guild_channel_delete")
+	@commands.Cog.listener("on_guild_role_delete")
+	async def channel_or_role_delete(self, channel_or_role):
+		if isinstance(channel_or_role, discord.Role):
+			event = "ROLE_DELETE"
+			kwargs = {"role": channel_or_role}
 
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=channel_or_role.guild,
-                              action=action,
-                              
-                              **kwargs)
+		else:
+			event = "CHANNEL_DELETE"
+			kwargs = {"channel": channel_or_role}
 
-    @commands.Cog.listener()
-    async def on_member_update(self,
-                               before: discord.Member,
-                               after: discord.Member):
-        """This handles nickname logging."""
+		await Handler(self.bot, channel_or_role.guild).dispatch(event,
+			**kwargs
+		)
 
-        if before.nick == after.nick or not guilds.get(after.guild.id, {}):
-            return
+	@commands.Cog.listener("on_guild_channel_create")
+	@commands.Cog.listener("on_guild_role_create")
+	async def channel_or_role_create(self, channel_or_role):
+		if isinstance(channel_or_role, discord.Role):
+			event = "ROLE_CREATE"
+			kwargs = {"role": channel_or_role}
 
-        # ================
-        # Nickname removed
-        # ================
-        if after.nick is None:
-            action = "NICKNAME_REMOVE"
-            kwargs = {
-                "user": after,
-                "nick": before.nick
-            }
+		else:
+			event = "CHANNEL_CREATE"
+			kwargs = {"channel": channel_or_role}
 
-        # ==============
-        # Nickname added
-        # ==============
-        elif before.nick is None:
-            action = "NICKNAME_ADD"
-            kwargs = {
-                "user": after,
-                "nick": after.nick
-            }
+		await Handler(self.bot, channel_or_role.guild).dispatch(event,
+			**kwargs
+		)
 
-        else:
-            action = "NICKNAME_CHANGE"
-            kwargs = {
-                "user": after,
-                "before": before.nick,
-                "after": after.nick
-            }
+	@commands.Cog.listener()
+	async def on_member_update(self, before, after):
+		if before.nick == after.nick:
+			return
 
-        self.artemis.dispatch(event_name="logging_action",
-                              guild=after.guild,
-                              action=action,
-                              
-                              **kwargs)
+		if after.nick is None:
+			event = "NICKNAME_REMOVE"
+			kwargs = {
+				"user": after,
+				"nick": before.nick
+			}
 
-    @commands.Cog.listener()
-    async def on_logging_action(self,
-                                guild: discord.Guild,
-                                action: str,
-                                **log_data: dict):
-        """Triggered every time a new logging event is dispatched.
-        
-        All of the formatting data is found in the log_data kwargs."""
+		elif before.nick is None:
+			event = "NICKNAME_ADD"
+			kwargs = {
+				"user": after,
+				"nick": after.nick
+			}
 
-        action = action.upper()
-        fmt = actions.get(action)
+		else:
+			event = "NICKNAME_CHANGE"
+			kwargs = {
+				"user": after,
+				"before": before.nick,
+				"after": after.nick
+			}
 
-        if fmt is None:
-            return console.warn(text=f"An unknown logging event ({action}) was dispatched to {guild.id}.")
-
-        channel_ids = utils.all(iterable=guilds.get(guild.id, {}).get("channels", {}).items(),
-                                condition=lambda c: action in c[1])
-
-        if not channel_ids:
-            return
-
-        channels = {self.artemis.get_channel(id=channel_id[0]) for channel_id in channel_ids}
-
-        for channel in channels:
-            if channel is None:
-                continue
-
-            if not channel.permissions_for(member=guild.me).send_messages:
-                continue
-
-            await channel.send(content=actions.base.format(at=datetime.utcnow().strftime(actions.time_format),
-                                                           emoji=fmt.get("emoji", "❔"),
-                                                           text=fmt.get("text", "").format(**log_data)))
-
-        console.debug(text=f"Successfully dispatched {action} event to {guild.id}.")
+		await Handler(self.bot, after.guild).dispatch(event,
+			**kwargs
+		)
 
 
-LOCAL_COGS = [
-    Listeners
-]
-
-def setup(artemis: Artemis):
-    for cog in LOCAL_COGS:
-        artemis.add_cog(cog=cog(artemis=artemis))
-        console.debug(text=f"Successfully loaded the {cog.__class__.__name__} cog.")
+def setup(bot):
+	bot.add_cog(Plugin(bot))
