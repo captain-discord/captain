@@ -13,7 +13,7 @@ class Handler:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.logs = {self.guild.get_channel(cid): e for cid, e in bot.guilds.get(self.guild.id).get("logs", {}).items()}
+		self.logs = {self.guild.get_channel(cid): e for cid, e in bot.guilds.get(self.guild.id, {}).get("logs", {}).items()}
 
 	def dm_fail_format(self, event, target):
 		base = self.bot.actions.get("dm_fail_base")

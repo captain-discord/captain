@@ -57,7 +57,7 @@ class SpamConfig(ConfigMixin, CountMixin):
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id).get("anti_spam", {})
+		self.raw = bot.guilds.get(self.guild.id, {}).get("anti_spam", {})
 
 		ConfigMixin.__init__(self, bot, guild, self.raw)
 		CountMixin.__init__(self, self.raw)
@@ -69,7 +69,7 @@ class PingSpamConfig(ConfigMixin, CountMixin):
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id).get("anti_ping_spam", {})
+		self.raw = bot.guilds.get(self.guild.id, {}).get("anti_ping_spam", {})
 
 		ConfigMixin.__init__(self, bot, guild, self.raw)
 		CountMixin.__init__(self, self.raw)
@@ -81,7 +81,7 @@ class CurseConfig(ConfigMixin):
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id).get("anti_curse", {})
+		self.raw = bot.guilds.get(self.guild.id, {}).get("anti_curse", {})
 		self.blacklist = self.raw.get("blacklist", [])
 
 		ConfigMixin.__init__(self, bot, guild, self.raw)
@@ -93,7 +93,7 @@ class InviteConfig(ConfigMixin):
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id).get("anti_invite", {})
+		self.raw = bot.guilds.get(self.guild.id, {}).get("anti_invite", {})
 		self.whitelist = self.raw.get("whitelist", [])
 
 		ConfigMixin.__init__(self, bot, guild, self.raw)
@@ -105,7 +105,7 @@ class AutoRoleConfig:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id).get("auto_roles", {})
+		self.raw = bot.guilds.get(self.guild.id, {}).get("auto_roles", {})
 		self.bot = list(filter(None, [self.guild.get_role(r) for r, e in self.raw.items() if "BOT" in e]))
 		self.human = list(filter(None, [self.guild.get_role(r) for r, e in self.raw.items() if "HUMAN" in e]))
 

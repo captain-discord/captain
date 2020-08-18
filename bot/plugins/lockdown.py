@@ -30,7 +30,7 @@ class Config:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id).get("lockdown", {})
+		self.raw = bot.guilds.get(self.guild.id, {}).get("lockdown", {})
 
 		raw_role = self.raw.get("locked_role", "everyone")
 
