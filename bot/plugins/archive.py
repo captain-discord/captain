@@ -218,7 +218,7 @@ class Plugin(commands.Cog, name="Message Archiving"):
 		with open(f"buffer-archive:{key}.html", "w", encoding="utf-8") as file:
 			file.write(self.make_html(ctx, id, messages))
 
-		msg = await ctx.send(content,
+		msg = await ctx.success(content,
 			file=discord.File(f"buffer-archive:{key}.html",
 				filename=f"Archive_{key}.html"
 			)
