@@ -1,0 +1,17 @@
+:root {
+	--md-primary-fg-color: #7289DA;
+	--md-accent-fg-color: #687ec5;
+	/* --md-primary-fg-color--light: #ECB7B7;
+	--md-primary-fg-color--dark:  #90030C; */
+}
+
+.twitter {
+	color: #1DA1F2;
+}
+.discord {
+	color: #7289DA;
+}
+.md-announce a,
+.md-announce a:hover {
+	color: white;
+}
