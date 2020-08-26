@@ -533,6 +533,30 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../config/lockdown/" title="Lockdown" class="md-nav__link">
+      Lockdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../config/logs/" title="Logging" class="md-nav__link">
+      Logging
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -606,11 +630,9 @@
                 
                 <p>Whenever a new Captain update arrives, you'll probably want to get it. This guide runs through the simple process of updating your Captain instance!</p>
 <h2 id="pull-the-repository">Pull the repository<a class="headerlink" href="#pull-the-repository" title="Permanent link">&para;</a></h2>
-<p>The first step is to download the new repository code.</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git pull</span>
-</code></pre></div>
-
-
+<p>The first step is to download the new repository code.
+<div class="highlight"><pre><span></span><code>git pull
+</code></pre></div></p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>You may find that new sections have been added to the configuration files. If so, you'll need to update your existing configuration files appropriately!</p>
@@ -619,27 +641,21 @@
 <p>Next, you'll need to recreate the Docker image for Captain. This is a pretty simple task, much like the one in the <a href="/setup/installation">installation</a> guide.</p>
 <ol>
 <li>First of all, make sure to cd into the <code>captain/bot</code> directory.</li>
-<li>Now run <code>docker build</code> like so:</li>
+<li>Now run <code>docker build</code> like so:
+<div class="highlight"><pre><span></span><code>docker build . --tag captain:3.1.0
+</code></pre></div></li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="err">docker build . --tag captain:3.1.0</span>
-</code></pre></div>
-
-
 <h2 id="redeploying-the-container">Redeploying the container<a class="headerlink" href="#redeploying-the-container" title="Permanent link">&para;</a></h2>
 <p>Redeploying Captain is a little more long-winded but should be an easy task. </p>
-<p>The first task is to stop the running container.</p>
-<div class="codehilite"><pre><span></span><code><span class="err">docker stop captain</span>
-</code></pre></div>
-
-
-<p>After that, you'll need to remove the container.</p>
-<div class="codehilite"><pre><span></span><code><span class="err">docker rm captain</span>
-</code></pre></div>
-
-
-<p>Now, you're ready to recreate the container just like you did before!</p>
-<div class="codehilite"><pre><span></span><code><span class="err">docker run -d --name captain --network=&quot;host&quot; captain:3.1.0</span>
-</code></pre></div>
+<p>The first task is to stop the running container.
+<div class="highlight"><pre><span></span><code>docker stop captain
+</code></pre></div></p>
+<p>After that, you'll need to remove the container.
+<div class="highlight"><pre><span></span><code>docker rm captain
+</code></pre></div></p>
+<p>Now, you're ready to recreate the container just like you did before!
+<div class="highlight"><pre><span></span><code>docker run -d --name captain --network=&quot;host&quot; captain:3.1.0
+</code></pre></div></p>
                 
                   
                     

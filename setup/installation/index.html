@@ -424,6 +424,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#additional-support" class="md-nav__link">
+    Additional support
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -533,6 +540,30 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../config/lockdown/" title="Lockdown" class="md-nav__link">
+      Lockdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../config/logs/" title="Logging" class="md-nav__link">
+      Logging
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -582,6 +613,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#additional-support" class="md-nav__link">
+    Additional support
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -605,30 +643,26 @@
                   <h1>Installation</h1>
                 
                 <h2 id="cloning-the-repository">Cloning the Repository<a class="headerlink" href="#cloning-the-repository" title="Permanent link">&para;</a></h2>
-<p>First thing's first, clone the repository!</p>
-<div class="codehilite"><pre><span></span><code><span class="err">git clone https://github.com/Jack-Gledhill/captain</span>
-</code></pre></div>
-
-
+<p>First thing's first, clone the repository!
+<div class="highlight"><pre><span></span><code>git clone https://github.com/Jack-Gledhill/captain
+</code></pre></div></p>
 <h2 id="configuration-files">Configuration files<a class="headerlink" href="#configuration-files" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Make sure to cd into the captain/bot directory.</li>
-<li>Now you need to edit 4 files. These four files will end with <code>.example.yml</code>, you need to rename them to have the <code>.yml</code> without the <code>.example</code>.</li>
-<li>Unless you want to change how logs are made or which emojis are used, you can ignore <code>actions.yml</code> and <code>emojis.yml</code> now. That leaves <code>config.yml</code> and <code>guilds.yml</code>.</li>
-<li>The <code>guilds.yml</code> file will be where you store configurations for all of your servers, you can see a detailed guide <a href="/configuration">in the Configuration section</a>.</li>
+<li>Now you need to edit 2 files. These two files are <code>config.example.yml</code> and <code>guilds.example.yml</code>, you need to rename them to have the <code>.yml</code> without the <code>.example</code> then edit them.</li>
 <li>On the other hand, <code>config.yml</code> only contains the information for the PostgreSQL and Redis servers. You'll need to make sure to edit this before you can run the bot.</li>
 <li>Lastly, you'll need to rename <code>core/constants.example.py</code> to <code>core/constants.py</code> then edit it. This file contains information for the core, like the bot's token and presence information.</li>
 </ol>
 <h2 id="deploying-a-captain-container">Deploying a Captain container<a class="headerlink" href="#deploying-a-captain-container" title="Permanent link">&para;</a></h2>
 <p>Deploying a container needs to be done in two steps. First you need to build the image,     then you need to run an instance of that image. It's easy though so don't worry!</p>
-<p>To build an image, cd into <code>captain/bot</code> then run <code>docker build</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="err">docker build . --tag captain:3.1.0</span>
-</code></pre></div>
-
-
-<p>Now all that's left to do is run an instance of the container with <code>docker run</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="err">docker run -d --name captain --network=&quot;host&quot; captain:3.1.0</span>
-</code></pre></div>
+<p>To build an image, cd into <code>captain/bot</code> then run <code>docker build</code>.
+<div class="highlight"><pre><span></span><code>docker build . --tag captain:3.1.0
+</code></pre></div></p>
+<p>Now all that's left to do is run an instance of the container with <code>docker run</code>.
+<div class="highlight"><pre><span></span><code>docker run -d --name captain --network=&quot;host&quot; captain:3.1.0
+</code></pre></div></p>
+<h2 id="additional-support">Additional support<a class="headerlink" href="#additional-support" title="Permanent link">&para;</a></h2>
+<p><img alt="🎉" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f389.svg" title=":tada:" /> Congratulations, you have officially set up your own Captain bot! If, somehow, you haven't, then join the <a href="https://discord.gg/pWraGYX">official Discord server</a> and we'll be happy to lend a hand!</p>
                 
                   
                     

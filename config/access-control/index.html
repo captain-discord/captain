@@ -89,7 +89,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#example" class="md-skip">
+        <a href="#levels-and-what-they-mean" class="md-skip">
           Skip to content
         </a>
       
@@ -482,13 +482,6 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#levels-and-what-they-mean" class="md-nav__link">
     Levels and what they mean
   </a>
@@ -553,6 +546,30 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../lockdown/" title="Lockdown" class="md-nav__link">
+      Lockdown
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../logs/" title="Logging" class="md-nav__link">
+      Logging
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -580,13 +597,6 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    Example
-  </a>
-  
-</li>
       
         <li class="md-nav__item">
   <a href="#levels-and-what-they-mean" class="md-nav__link">
@@ -645,8 +655,9 @@
                   <h1>Access Control</h1>
                 
                 <p>In short, the <code>access_control</code> section allows server admins to configure which roles are allowed to use what commands.</p>
-<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">access_control</span><span class="p">:</span>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<div class="highlight"><pre><span></span><code><span class="nt">access_control</span><span class="p">:</span>
     <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
         <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> <span class="c1"># 100 = admin (all commands)</span>
     <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
@@ -662,7 +673,7 @@
         <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># 0 = default (non-mod commands)</span>
 </code></pre></div>
 
-
+</div>
 <h2 id="levels-and-what-they-mean">Levels and what they mean<a class="headerlink" href="#levels-and-what-they-mean" title="Permanent link">&para;</a></h2>
 <p>A level is sort of like a preset of commands that a role should use. For example, users with the mod level should be able to use Moderation commands, but not Administration commands (such as lockdown and infraction clearing). Below, you'll find a table showing which level ID matches a particular role.</p>
 <table>
@@ -694,7 +705,7 @@
 <h2 id="creating-your-own-levels">Creating your own levels<a class="headerlink" href="#creating-your-own-levels" title="Permanent link">&para;</a></h2>
 <p>Currently, there's no way to create your own level designation (e.g. 80 for trial mod), but it is planned. However, you can achieve the same effect by using an existing level as a base then adding overwrites. </p>
 <p>For example, here's what a trial mod level would look like (trial mods may have different access to commands for your server but the idea is the same).</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">access_control</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">access_control</span><span class="p">:</span>
     <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
         <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">90</span> <span class="c1"># we&#39;ll use moderator as a base here</span>
         <span class="nt">overwrites</span><span class="p">:</span>
@@ -703,7 +714,6 @@
             <span class="nt">inf search</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
             <span class="nt">inf recent</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
-
 
 <h3 id="breaking-it-down">Breaking it down<a class="headerlink" href="#breaking-it-down" title="Permanent link">&para;</a></h3>
 <p>Alright so this look a little scary at first, but I promise it isn't!</p>
