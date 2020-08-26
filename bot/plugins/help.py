@@ -1,4 +1,4 @@
-import menus as menus
+import menus
 
 import core.prefix as prefix
 

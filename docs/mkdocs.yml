@@ -1,0 +1,80 @@
+site_name: Captain Bot Documentation
+site_description: Any documentation for Captain Bot can be found here. 
+site_author: Jack Gledhill
+site_dir: 
+copyright: Copyright © 2018-2020 JackTEK
+
+repo_name: Jack-Gledhill/captain
+repo_url: https://github.com/Jack-Gledhill/captain
+edit_uri: edit/master/docs/
+
+nav:
+  - Introduction:
+      Welcome: index.md
+      Changelog: intro/changelog.md
+      Get Captain: intro/get-captain.md
+  - Setup Guide:
+      Installation: setup/installation.md
+      Updating: setup/updating.md
+      Prerequisites: setup/prerequisites.md
+  - Configuration:
+      Introduction: config/index.md
+      Access Control: config/access-control.md
+      Auto Mod: config/auto-mod.md
+      Auto Roles: config/auto-roles.md
+      Infractions: config/infractions.md
+      Lockdown: config/lockdown.md
+      Logging: config/logs.md
+      Persistent Roles: config/persistent-roles.md
+      Reaction Roles: config/reaction-roles.md
+      Starboards: config/starboards.md
+      Stat Counters: config/stat-counters.md
+
+theme:
+  name: material
+  custom_dir: overrides
+  favicon: img/favicon.ico
+
+  logo: img/logo.png
+  icon:
+    logo: material/library
+    repo: fontawesome/brands/github
+
+  palette:
+    scheme: preference
+
+  features:
+    - search.highlight
+    - instant
+    - tabs
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - codehilite
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
+
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Jack-Gledhill/captain
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/pWraGYX
+
+plugins:
+  - search
+  - git-revision-date-localized
+
+extra_css:
+  - styles/colors.css
+
+google_analytics:
+  - UA-176443469-1
+  - auto

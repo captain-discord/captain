@@ -74,7 +74,7 @@ def create_message(message, stars):
 		if not message.channel.is_nsfw():
 			first_file = message.attachments[0]
 			if first_file.url.lower().endswith(IMAGE_EXTENSIONS):
-				embed.set_image(first_file.url)
+				embed.set_image(url=first_file.url)
 
 		attach_content = ""
 		for attachment in message.attachments:
@@ -169,13 +169,13 @@ class Plugin(commands.Cog):
 
 		config = Config(self.bot, payload.guild_id)
 
-		if not config.enabled or config.channel is None or str(payload.emoji) != config.emoji or payload.channel_id == config.channel.id or payload.channel_id in config.ignored_channels:
+		if not config.enabled or config.channel is None or str(payload.emoji) != config.emoji or payload.channel_id == config.channel.id:
 			return
 
 		channel = self.bot.get_channel(payload.channel_id)
 		message = await channel.fetch_message(payload.message_id)
 
-		if config.is_ignored(message.author, message.channel):
+		if config.is_ignored(config.guild.get_member(payload.user_id), message.channel):
 			return
 
 		async with self.bot.postgres.acquire() as con:

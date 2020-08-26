@@ -1,8 +1,9 @@
-# Configuration files
 actions.yml
 config.yml
 emojis.yml
 guilds.yml
+core/constants.py
+docs/site
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

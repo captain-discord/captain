@@ -105,7 +105,6 @@
             - MEMBER_BAN
             - MEMBER_TEMPBAN
             - MEMBER_BAN_EXPIRE
-            - MEMBER_SOFTBAN
             - MEMBER_UNBAN
             
             - MEMBER_KICK 

@@ -56,12 +56,18 @@ class Config:
 class Plugin(commands.Cog):
 	class Level:
 		DEFAULT = 0
+		TRUSTED = 10
 		MOD     = 90
 		ADMIN   = 100
 
 
 	def __init__(self, bot):
 		self.bot = bot
+
+		self.bot.add_check(self.require_default_level)
+
+	async def require_default_level(self, ctx):
+		return Config(self.bot, ctx.guild).can_use(ctx.author, ctx.command, self.Level.DEFAULT)
 
 	def require(self, level):
 		async def predicate(ctx):

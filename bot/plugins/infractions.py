@@ -277,7 +277,7 @@ class Plugin(commands.Cog, name="User Infractions"):
 		if target.top_role >= actor.guild.me.top_role:
 			raise CannotPunish(f"My highest role ({actor.guild.me.top_role.mention}) needs to be above {target}'s highest role ({target.top_role.mention})")
 
-	@access_control.require(access_control.Level.MOD)
+	@access_control.require(access_control.Level.TRUSTED)
 	@commands.command("bean",
 		usage="bean <target:user> [reason:text]",
 		hidden=True
@@ -291,6 +291,21 @@ class Plugin(commands.Cog, name="User Infractions"):
 
 		self.check_perms(ctx.author, target)
 		await ctx.success(f"{target} (`{target.id}`) has been beaned for:\n{reason}")
+
+	@access_control.require(access_control.Level.TRUSTED)
+	@commands.command("moot",
+		usage="moot <target:user> [reason:text]",
+		hidden=True
+	)
+	@commands.bot_has_permissions(ban_members=True)
+	async def moot(self, ctx, 
+		target: discord.Member, 
+		*, reason: str = "No reason given."
+	):
+		"""Like bean but for mutes ;)"""
+
+		self.check_perms(ctx.author, target)
+		await ctx.success(f"{target} (`{target.id}`) has been mooted for:\n{reason}")
 
 	@access_control.require(access_control.Level.MOD)
 	@commands.command("ban",

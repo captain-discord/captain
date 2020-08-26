@@ -1,8 +1,154 @@
 postgres: postgres://someuser:youshallnotpass@127.0.0.1:5432/captain
 
 redis:
-  host: 127.0.0.1
-  port: 6379
+    host: 127.0.0.1
+    port: 6379
 
-  password: youshallnotpass
-  database: 0
+    password: youshallnotpass
+    database: 0
+
+emojis:
+    tick: <:greenTick:728254460639313940>
+    cross: <:redTick:730419684989730839>
+
+actions:
+    base: "[`{at}`] {emoji} | {text}"
+    dm_fail_base: "[`{at}`] ❓ | I couldn't notify {target} (`{target.id}`) about their {infraction}."
+    time_format: "%H:%M:%S"
+
+    MEMBER_BAN:
+        emoji: 🚪
+        infraction: ban
+
+        text: "[`#{case}`] | {target} (`{target.id}`) has been banned by {actor} (`{actor.id}`) for `{reason}`"
+        dm: "[`#{case}`] | You have been banned by {actor} (`{actor.id}`) in {guild} for `{reason}`"
+    MEMBER_TEMPBAN:
+        emoji: 🚪
+        infraction: tempban
+
+        text: "[`#{case}`] | {target} (`{target.id}`) has been banned by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+        dm: "[`#{case}`] | You have been banned from {guild} by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+    MEMBER_BAN_EXPIRE:
+        emoji: 😇
+        infraction: expired ban
+
+        text: "{target} (`{target.id}`) has been automatically unbanned because their tempban (`#{case}`) expired."
+        dm: "You have been automatically unbanned from {guild} because your tempban (`#{case}`) expired."
+    MEMBER_UNBAN:
+        emoji: 😇
+        infraction: unban
+
+        text: "{target} (`{target.id}`) has been unbanned by {actor} (`{actor.id}`)."
+        dm: "You have been unbanned from {guild} by {actor} (`{actor.id}`)."
+    MEMBER_KICK:
+        emoji: 👢
+        infraction: kick
+
+        text: "[`#{case}`] | {target} (`{target.id}`) has been kicked by {actor} (`{actor.id}`) for `{reason}`"
+        dm: "[`#{case}`] | You have been kicked from {guild} by {actor} (`{actor.id}`) for `{reason}`"
+    MEMBER_MUTE:
+        emoji: 😶
+        infraction: mute
+
+        text: "[`#{case}`] | {target} (`{target.id}`) has been muted by {actor} (`{actor.id}`) for `{reason}`"
+        dm: "[`#{case}`] | You have been muted in {guild} by {actor} (`{actor.id}`) for `{reason}`"
+    MEMBER_REMUTE:
+        emoji: ❗
+        infraction: remute
+
+        text: "{target} (`{target.id}`) has been automatically re-muted because they re-joined before their mute expired."
+        dm: "You have been automatically re-muted in {guild} because you re-joined before your mute expired."
+    MEMBER_TEMPMUTE:
+        emoji: 😶
+        infraction: tempmute
+
+        text: "[`#{case}`] | {target} (`{target.id}`) has been muted by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+        dm: "[`#{case}`] | You have been muted in {guild} by {actor} (`{actor.id}`) for {duration} for `{reason}`"
+    MEMBER_MUTE_EXPIRE:
+        emoji: 😲
+        infraction: expired mute
+
+        text: "{target} (`{target.id}`) has been automatically unmuted because their tempmute (`#{case}`) expired."
+        dm: "You have been automatically unmuted in {guild} because your tempmute (`#{case}`) expired."
+    MEMBER_UNMUTE:
+        emoji: 😲
+        infraction: unmute
+
+        text: "{target} (`{target.id}`) has been unmuted by {actor} (`{actor.id}`)."
+        dm: "You have been unmuted in {guild} by {actor} (`{actor.id}`)."
+    MEMBER_WARN:
+        emoji: ⚠️
+        infraction: warning
+
+        text: "[`#{case}`] | {target} (`{target.id}`) has been warned by {actor} (`{actor.id}`) for `{reason}`"
+        dm: "[`#{case}`] | You have been warned in {guild} by {actor} (`{actor.id}`) for `{reason}`"
+
+    LOCKDOWN:
+        emoji: 🚨
+        
+        text: "{actor} (`{actor.id}`) has activated lockdown in **#{channel}**."
+    LOCKDOWN_TEMP:
+        emoji: 🚨
+        
+        text: "{actor} (`{actor.id}`) has activated lockdown in **#{channel}** for {duration}."
+    LOCKDOWN_EXPIRE:
+        emoji: 🚨
+        
+        text: "Lockdown in **#{channel}** has been automatically deactivated because it has expired."
+    LOCKDOWN_CANCEL:
+        emoji: 🚨
+        
+        text: "{actor} (`{actor.id}`) has deactivated lockdown in **#{channel}**."
+
+    MESSAGE_EDIT:
+        emoji: 📝
+
+        text: "Message (`{after.id}`) by {after.author} (`{after.author.id}`) in **#{after.channel}** has been edited:\n{after.jump_url}\n\n**Old message:**\n\n{before.clean_content}\n\n**New message:**\n\n{after.clean_content}"
+    MESSAGE_DELETE:
+        emoji: 🗑️
+
+        text: "Message (`{message.id}`) by {message.author} (`{message.author.id}`) in **#{message.channel}** has been deleted:\n{message.jump_url}\n\n{message.clean_content}"
+    MESSAGE_BULK_DELETE:
+        emoji: 💣
+
+        text: "{amount} messages have been purged in **#{channel}** (`{channel.id}`)."
+
+    MEMBER_JOIN:
+        emoji: 📥
+
+        text: "{user} (`{user.id}`) is the {ordinal} member to join the server."
+    MEMBER_LEAVE:
+        emoji: 📤
+
+        text: "{user} (`{user.id}`) has left the server, they joined {joined_ago} ago."
+
+    ROLE_CREATE:
+        emoji: 🖊️
+
+        text: "**{role}** (`{role.id}`) role has been created."
+    ROLE_DELETE:
+        emoji: 🗑️
+
+        text: "**{role}** (`{role.id}`) role has been deleted."
+    CHANNEL_CREATE:
+        emoji: 🖊️
+
+        text: "**#{channel}** (`{channel.id}`) {channel.type} channel has been created."
+
+    CHANNEL_DELETE:
+        emoji: 🗑️
+
+        text: "**#{channel}** (`{channel.id}`) {channel.type} channel has been deleted."
+
+    NICKNAME_ADD:
+        emoji: 📛
+
+        text: "{target} (`{target.id}`) set their nickname to `{nick}`."
+    NICKNAME_CHANGE:
+        emoji: 📛
+
+        text: "{target} (`{target.id}`) changed their nickname from `{before}` to `{after}`."
+    NICKNAME_REMOVE:
+        emoji: 📛
+
+        text: "{target} (`{target.id}`) removed their nickname `{nick}`."

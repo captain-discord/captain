@@ -77,6 +77,7 @@ class Timer:
 
 		await self.remove()
 		self.dispatch()
+		ext.state.timer_handler.running_timers.remove(self)
 
 	async def cancel(self, remove_cache=True):
 		"""This cancels the current task.
@@ -88,11 +89,11 @@ class Timer:
 
 		self.bot.log.debug(f"Timer {self.id} with event {EVENT_BASE.format(self.event)} has been cancelled.")
 
-		if remove_cache:
-			self.bot.timer_backend.running_timers.remove(self)
-
 		self.cancelled = True
 		await self.remove()
+
+		if remove_cache:
+			ext.state.timer_handler.running_timers.remove(self)
 
 	async def remove(self):
 		"""This removes the timer from the database."""
@@ -177,6 +178,11 @@ class Plugin(commands.Cog):
 			return first(self.running_timers, lambda timer_set: timer_set.id == query and timer_set.event == event)
 
 		return first(self.running_timers, lambda timer_set: all(item in timer_set.extras.items() for item in query.items()) and timer_set.event == event)
+
+	def get_all(self, event, query):
+		"""Returns all running timers that match the provided query."""
+
+		return [t for t in self.running_timers if all(item in t.extras.items() for item in query.items()) and t.event == event]
 
 def setup(bot):
 	ext.state.timer_handler = cog = Plugin(bot)

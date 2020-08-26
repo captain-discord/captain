@@ -1,0 +1,1 @@
+These pages document all of the features, setup instructions and configuration guides for the [Captain Discord bot](https://captainbot.xyz).
