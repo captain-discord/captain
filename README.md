@@ -2,7 +2,7 @@
 
 Captain is my own personal take on a cross between GearBot and Rowboat. Of course, this bot is still in development and will be for a very long time.
 
-**If you need support or wish to report a bug, please join my Discord server: https://discord.gg/CsHF5GX**
+**If you need support or wish to report a bug, please join my Discord server: https://discord.gg/pWraGYX**
 
 ## Features
 
@@ -42,4 +42,4 @@ Yup! Though only for public servers since my hosting resources are limited. If y
 
 ## Running your own instance
 
-For help with installing Captain on your server, see my [official setup guide](https://docs.jacktek.net/captain/getting-started).
+For help with installing Captain on your server, see the [documentation website](https://docs.captainbot.xyz).
