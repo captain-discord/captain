@@ -17,7 +17,7 @@ Next, you'll need to recreate the Docker image for Captain. This is a pretty sim
 1. First of all, make sure to cd into the `captain/bot` directory.
 2. Now run `docker build` like so:
 ```
-docker build . --tag captain:3.1.0
+docker build . --tag captain:3.1.1
 ```
 
 ## Redeploying the container
@@ -36,5 +36,8 @@ docker rm captain
 
 Now, you're ready to recreate the container just like you did before!
 ```
-docker run -d --name captain --network="host" captain:3.1.0
+docker run -d -v ~/captain/bot/guilds.yml:/opt/bot/guilds.yml -v ~/captain/bot/config.yml:/opt/bot/config.yml -v ~/captain/bot/core/constants.py:/opt/bot/core/constants.py --name captain --network="host" captain:3.1.1
 ```
+
+!!! note
+	If your clone's directory is located somewhere other than `~/captain`, you will need to change the bind-mounts for the config files.

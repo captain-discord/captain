@@ -17,13 +17,16 @@ Deploying a container needs to be done in two steps. First you need to build the
 
 To build an image, cd into `captain/bot` then run `docker build`.
 ```
-docker build . --tag captain:3.1.0
+docker build . --tag captain:3.1.1
 ```
 
 Now all that's left to do is run an instance of the container with `docker run`.
 ```
-docker run -d --name captain --network="host" captain:3.1.0
+docker run -d -v ~/captain/bot/guilds.yml:/opt/bot/guilds.yml -v ~/captain/bot/config.yml:/opt/bot/config.yml -v ~/captain/bot/core/constants.py:/opt/bot/core/constants.py --name captain --network="host" captain:3.1.1
 ```
+
+!!! note
+	If your clone's directory is located somewhere other than `~/captain`, you will need to change the bind-mounts for the config files.
 
 ## Additional support
 

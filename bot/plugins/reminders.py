@@ -8,6 +8,7 @@ from discord.ext import commands
 
 from ext.converters import DurationConverter
 from ext.exceptions import LookupFailed, MissingSubcommand
+from ext.state import access_control
 from ext.utils import time_since
 
 
@@ -62,6 +63,7 @@ class Plugin(commands.Cog, name="Reminders"):
 	def __init__(self, bot):
 		self.bot = bot
 
+	@access_control.require(access_control.Level.DEFAULT)
 	@commands.group("reminder",
 		usage="reminder",
 		aliases=["reminders"],
@@ -72,6 +74,7 @@ class Plugin(commands.Cog, name="Reminders"):
 
 		raise MissingSubcommand()
 
+	@access_control.require(access_control.Level.DEFAULT)
 	@reminder.command("create",
 		usage="reminder create <duration:text> <content:text>",
 		aliases=["new", "add"]
@@ -93,6 +96,7 @@ class Plugin(commands.Cog, name="Reminders"):
 		)
 		await ctx.success(f"I've set a reminder {time_since(seconds=duration)} from now for:\n{content}")
 
+	@access_control.require(access_control.Level.DEFAULT)
 	@reminder.command("list",
 		usage="reminder list",
 		aliases=["show", "all"]
@@ -106,6 +110,7 @@ class Plugin(commands.Cog, name="Reminders"):
 		
 		await Paginator(ReminderSource(timers)).start(ctx)
 
+	@access_control.require(access_control.Level.DEFAULT)
 	@reminder.command("cancel",
 		usage="reminder cancel <id:num>",
 		aliases=["delete", "remove"]

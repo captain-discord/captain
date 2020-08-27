@@ -1,6 +1,4 @@
-actions.yml
 config.yml
-emojis.yml
 guilds.yml
 core/constants.py
 docs/site

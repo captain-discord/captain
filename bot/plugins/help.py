@@ -6,6 +6,7 @@ from discord import Embed
 from discord.ext import commands
 
 from ext.exceptions import LookupFailed
+from ext.state import access_control
 from ext.utils import time_since
 
 
@@ -102,9 +103,10 @@ class Plugin(commands.Cog, command_attrs=dict(hidden=True)):
 				clear_reactions_after=True
 			)
 
-	@commands.group("help",
+	@access_control.require(access_control.Level.DEFAULT)
+	@commands.command("help",
 		usage="help [command|category:text]",
-		invoke_without_command=True
+		aliases=["commands"]
 	)
 	async def help(self, ctx, *, command_lookup: str = None):
 		command_sets = []

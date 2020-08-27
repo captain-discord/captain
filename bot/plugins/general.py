@@ -5,6 +5,7 @@ from inspect import getsourcelines
 from time import perf_counter
 
 from ext.exceptions import LookupFailed
+from ext.state import access_control
 
 
 class Plugin(commands.Cog, name="Utility Commands"):
@@ -13,6 +14,7 @@ class Plugin(commands.Cog, name="Utility Commands"):
 	def __init__(self, bot):
 		self.bot = bot 
 
+	@access_control.require(access_control.Level.DEFAULT)
 	@commands.command("ping",
 		usage="ping"
 	)
@@ -25,6 +27,7 @@ class Plugin(commands.Cog, name="Utility Commands"):
 
 		await message.edit(content=f"🏓 **Roundtrip:** {round((stop - start) * 1000)} ms | **Websocket:** {round(ctx.bot.latency * 1000)} ms")
 
+	@access_control.require(access_control.Level.DEFAULT)
 	@commands.command("source",
 		usage="source [command:text]"
 	)

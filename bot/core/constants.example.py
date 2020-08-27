@@ -28,6 +28,7 @@ PLUGINS: list = [
 	"plugins.infractions",
 	"plugins.lockdown",
 	"plugins.logging",
+	"plugins.owner",
 	"plugins.persistent_roles",
 	"plugins.presence",
 	"plugins.postgres",

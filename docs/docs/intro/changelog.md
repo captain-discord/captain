@@ -1,3 +1,11 @@
+## v3.1.1
+
+This patch implements the following changes:
+
+* Added a command (`reload guilds`) to reload the guilds.yml file
+* Updated docker run command to bind-mount config files into the container
+* Fixed a problem with access control overwrites not working
+
 ## v3.1.0 
 
 This release implements the following changes:

@@ -38,18 +38,18 @@ class Config:
 			key=lambda i: i.level
 		)[0]
 		
-		overwrites = list(filter(None, [(l.overwrites.get(command.qualified_name), l.level) for l in all_levels]))
+		overwrites = [(l.overwrites.get(command.qualified_name), l.level) for l in all_levels]
 
 		if overwrites:
-			overwritten = sorted(overwrites,
+			overwritten = list(filter(None.__ne__, [i[0] for i in sorted(overwrites,
 				key=lambda i: i[1]
-			)
+			)]))
 
 		else:
 			overwritten = None
 
-		if overwritten is not None:
-			return overwritten
+		if overwritten:
+			return overwritten[0]
 
 		return top_level.level >= needed_level
 
@@ -63,11 +63,6 @@ class Plugin(commands.Cog):
 
 	def __init__(self, bot):
 		self.bot = bot
-
-		self.bot.add_check(self.require_default_level)
-
-	async def require_default_level(self, ctx):
-		return Config(self.bot, ctx.guild).can_use(ctx.author, ctx.command, self.Level.DEFAULT)
 
 	def require(self, level):
 		async def predicate(ctx):

@@ -23,6 +23,7 @@ class Plugin(commands.Cog):
 		if await self.bot.is_owner(ctx.author):
 			return True
 
+		# TODO: check if this is actually working
 		if self.bot.guilds.get(ctx.guild.id) is None:
 			return False
 
