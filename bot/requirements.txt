@@ -1,4 +1,5 @@
 asyncpg
+claptcha
 discord.py
 redis
 tabulate

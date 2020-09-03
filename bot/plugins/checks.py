@@ -2,6 +2,12 @@ import discord
 
 from discord.ext import commands
 
+from ext.exceptions import CustomException
+
+
+class NotConfigured(CustomException):
+	pass
+
 
 class Plugin(commands.Cog):
 	def __init__(self, bot):
@@ -11,11 +17,6 @@ class Plugin(commands.Cog):
 		self.bot.add_check(self.can_speak)
 		self.bot.add_check(self.response_injector)
 
-	def cog_unload(self):
-		self.bot.remove_check(self.is_configured)
-		self.bot.remove_check(self.can_speak)
-		self.bot.remove_check(self.response_injector)
-
 	async def is_configured(self, ctx):
 		if ctx.guild is None:
 			raise commands.NoPrivateMessage()
@@ -23,9 +24,8 @@ class Plugin(commands.Cog):
 		if await self.bot.is_owner(ctx.author):
 			return True
 
-		# TODO: check if this is actually working
-		if self.bot.guilds.get(ctx.guild.id) is None:
-			return False
+		if ctx.guild.id not in self.bot.configs.keys():
+			raise NotConfigured()
 
 		return True
 
@@ -33,7 +33,7 @@ class Plugin(commands.Cog):
 		if ctx.guild is None:
 			return True
 
-		if not ctx.channel.permissions_for(ctx.guild.me).read_messages:
+		if not ctx.channel.permissions_for(ctx.guild.me).send_messages:
 			return False
 
 		return True

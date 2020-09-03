@@ -8,8 +8,8 @@ redis:
     database: 0
 
 emojis:
-    tick: <:greenTick:728254460639313940>
-    cross: <:redTick:730419684989730839>
+    tick: ✅
+    cross: ❌ 
 
 actions:
     base: "[`{at}`] {emoji} | {text}"

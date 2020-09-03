@@ -103,7 +103,7 @@ class Config:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id, {}).get("starboard", {})
+		self.raw = bot.configs.get(self.guild.id, {}).get("starboard", {})
 
 		self.enabled = self.raw.get("enabled", False)
 		self.emoji = self.raw.get("emoji", "⭐")

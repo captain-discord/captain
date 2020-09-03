@@ -1,3 +1,5 @@
+import core.prefix as prefix
+
 from datetime import datetime
 from random import choice
 from re import finditer
@@ -202,3 +204,6 @@ def clean_user(guild, user_id):
 		return member
 
 	return user_id
+
+def fmt_prefix(command):
+	return prefix.default + command

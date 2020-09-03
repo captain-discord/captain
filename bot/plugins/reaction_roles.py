@@ -13,7 +13,7 @@ class Config:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id, {}).get("reaction_roles", {})
+		self.raw = bot.configs.get(self.guild.id, {}).get("reaction_roles", {})
 
 		self.enabled = self.raw.get("enabled", False)
 		self.channel = self.guild.get_channel(self.raw.get("channel"))

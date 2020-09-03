@@ -22,7 +22,7 @@ class Config:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id, {}).get("access_control", {})
+		self.raw = bot.configs.get(self.guild.id, {}).get("access_control", {})
 		self.levels = [Level(self.guild, r, **options) for r, options in self.raw.items()]
 
 	def can_use(self, member, command, needed_level):

@@ -5,7 +5,76 @@
 # 3 = warn
 # 4 = do nothing
 
+# Custom Command Action ID Guide
+# ------------------------------
+# 0 = send message
+# 1 = toggle role
+
+# Roles for Badges Flags
+# ----------------------
+# 1      = Discord Staff
+# 2      = Discord Partner
+# 4      = HypeSquad Events Member
+# 8      = Bug Hunter
+# 64     = HypeSquad Bravery
+# 128    = HypeSquad Brilliance
+# 256    = HypeSquad Balance
+# 512    = Early Supporter
+# 16384  = Gold Bug Hunter
+# 131072 = Verified Bot Developer
+
+# Verification Types
+# ------------------
+# 0 = agree command
+# 1 = captcha verification
+
+# Verification Actions
+# --------------------
+# 0 = add role
+# 1 = remove role
+
 123456789098765432: # server ID
+    nickname: Captain Hook # any text you want (max 32 chars)
+
+    gatekeeper:
+        enabled: true
+        
+        min_age: 604800
+        checks_for_bypass: 2 # null will disable auto-bypassing
+
+        type: 1
+        action: 1
+        role: 123456789098765432 # role ID
+        
+        extras:
+            char_length: 6
+            noise: 0.6
+            attempts: 3
+
+    bot_filter:
+        enabled: true
+        require_verification: true
+        min_age: 86400
+
+        whitelist:
+            - 123456789098765432 # bot ID
+
+    roles_for_badges:
+        enabled: true
+        sync_on:
+            - JOIN
+        flags:
+            1: 123456789098765432 # role ID
+            2: 123456789098765432 # role ID
+            4: 123456789098765432 # role ID
+            8: 123456789098765432 # role ID
+            64: 123456789098765432 # role ID
+            128: 123456789098765432 # role ID
+            256: 123456789098765432 # role ID
+            512: 123456789098765432 # role ID
+            16384: 123456789098765432 # role ID
+            131072: 123456789098765432 # role ID
+
     access_control:
         123456789098765432: # role ID
             level: 100
@@ -99,6 +168,18 @@
             - discord-developers
             - discord-testers 
             - discord-events
+            
+    anti_link:
+        enabled: true
+        action: 2
+        duration: 3600
+
+        ignored_roles:
+            - 123456789098765432 # role ID
+        ignored_channels: 
+            - 123456789098765432 # text channel ID
+        whitelist: 
+            - https://captainbot.xyz
 
     logs:
         123456789098765432: # text channel ID
@@ -138,3 +219,11 @@
         enabled: true
         whitelist:
             - 123456789098765432 # role ID
+
+    custom_commands:
+        - name: lorem
+          action: 0
+          value: "{ctx.author.mention} Lorem ipsum dolor sit amet"
+        - name: ipsum
+          action: 1
+          value: 123456789098765432 # role ID

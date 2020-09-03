@@ -77,5 +77,8 @@ class DurationConverter(commands.Converter):
 		
 			except (KeyError, ValueError):
 				raise commands.BadArgument()
+
+		if time == 0:
+			raise commands.BadArgument()
 		
 		return time

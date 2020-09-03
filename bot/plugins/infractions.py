@@ -33,7 +33,7 @@ class Handler:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id, {}).get("infractions", {})
+		self.raw = bot.configs.get(self.guild.id, {}).get("infractions", {})
 
 		self.mute_role = self.guild.get_role(self.raw.get("mute_role"))
 		self.ban_purge_days = self.raw.get("ban_purge_days", 7)

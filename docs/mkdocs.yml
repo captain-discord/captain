@@ -11,22 +11,34 @@ edit_uri: edit/master/docs/docs/
 nav:
   - Introduction:
       Welcome: index.md
-      Changelog: intro/changelog.md
       Get Captain: intro/get-captain.md
+      
+  - Changelog:
+      All Releases: changelog/index.md
+      Release v3.2.0: changelog/v3.2.0.md
+      Release v3.1.1: changelog/v3.1.1.md
+      Release v3.1.0: changelog/v3.1.0.md
+      Release v3.0.0: changelog/v3.0.0.md
+      
   - Setup Guide:
       Installation: setup/installation.md
       Updating: setup/updating.md
       Prerequisites: setup/prerequisites.md
+
   - Configuration:
       Introduction: config/index.md
       Access Control: config/access-control.md
       Auto Mod: config/auto-mod.md
       Auto Roles: config/auto-roles.md
+      Bot Filter: config/bot-filter.md
+      Custom Commands: config/custom-commands.md
+      Gatekeeper: config/gatekeeper.md
       Infractions: config/infractions.md
       Lockdown: config/lockdown.md
       Logging: config/logs.md
       Persistent Roles: config/persistent-roles.md
       Reaction Roles: config/reaction-roles.md
+      Roles for Badges: config/roles-for-badges.md
       Starboards: config/starboards.md
       Stat Counters: config/stat-counters.md
 
@@ -50,6 +62,7 @@ theme:
 
 markdown_extensions:
   - admonition
+  - attr_list
   - footnotes
   - codehilite
   - pymdownx.details
@@ -60,6 +73,7 @@ markdown_extensions:
 
   - toc:
       permalink: true
+      toc_depth: 3
 
 extra:
   social:

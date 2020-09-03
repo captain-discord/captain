@@ -31,6 +31,7 @@ class Plugin(commands.Cog):
 			),
 			status=status
 		)
+		self.bot.log.debug("Re-sent presence information.")
 
 	@presence_maintainer.before_loop
 	async def presence_maintainer_wait(self):

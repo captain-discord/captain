@@ -5,7 +5,7 @@ import core.prefix as prefix
 from discord.ext import commands
 from traceback import format_tb
 
-from ext.exceptions import AccessDenied, LookupFailed, MissingSubcommand, NotConfigured
+from ext.exceptions import AccessDenied, LookupFailed, MissingSubcommand, NotConfigured, NotEnabled
 from ext.utils import time_since
 
 
@@ -79,6 +79,10 @@ class Plugin(commands.Cog):
 
 			if isinstance(error.original, NotConfigured):
 				await res(f"A required setting is missing from the server config: `{error.original.missing_config}`.")
+				return True
+
+			if isinstance(error.original, NotEnabled):
+				await res(f"A required feature is disabled: `{error.original.disabled_feature}`.")
 				return True
 
 			if isinstance(error.original, AccessDenied):

@@ -22,4 +22,7 @@ def setup(bot: commands.Bot):
 		bot.log.info("Successfully connected to Redis server.")
 
 	except:
-		bot.log.fatal( "Can't connect to Redis, reason: error occured when making connection.", exc_info=True)
+		bot.log.fatal( "Can't connect to Redis, reason: error occured when making connection.", 
+			exc_info=True
+		)
+		quit()

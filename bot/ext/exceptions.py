@@ -15,3 +15,7 @@ class LookupFailed(CustomException):
 class NotConfigured(CustomException):
 	def __init__(self, missing_config):
 		self.missing_config = missing_config
+
+class NotEnabled(CustomException):
+	def __init__(self, disabled_feature):
+		self.disabled_feature = disabled_feature

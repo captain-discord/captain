@@ -17,7 +17,7 @@ class Config:
 		if isinstance(guild, int):
 			self.guild = bot.get_guild(guild)
 
-		self.raw = bot.guilds.get(self.guild.id, {}).get("stat_counters", {})
+		self.raw = bot.configs.get(self.guild.id, {}).get("stat_counters", {})
 		self.counters = [Counter(bot, id, **options) for id, options in self.raw.items()]
 
 	def get(self, events):

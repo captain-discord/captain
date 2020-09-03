@@ -32,4 +32,7 @@ def setup(bot):
 		bot.dispatch("postgres_connect")
 
 	except:
-		bot.log.fatal("Can't connect to Postgres, reason: error occured when making connection.", exc_info=True)
+		bot.log.fatal("Can't connect to Postgres, reason: error occured when making connection.", 
+			exc_info=True
+		)
+		quit()
