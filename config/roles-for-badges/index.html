@@ -19,7 +19,7 @@
     
     
       
-        <title>Starboards - Captain Bot Documentation</title>
+        <title>Roles for Badges - Captain Bot Documentation</title>
       
     
     
@@ -54,7 +54,7 @@
   
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Captain Bot Documentation - Starboards">
+  <meta property="og:title" content="Captain Bot Documentation - Roles for Badges">
   <meta property="og:description" content="Any documentation for Captain Bot can be found here.">
   <meta property="og:url" content="None">
   <meta property="og:image" content="/img/meta_image.png">
@@ -67,7 +67,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="docs.captainbot.xyz">
   <meta name="twitter:creator" content="JackTEKhill">
-  <meta name="twitter:title" content="Captain Bot Documentation - Starboards">
+  <meta name="twitter:title" content="Captain Bot Documentation - Roles for Badges">
   <meta name="twitter:description" content="Any documentation for Captain Bot can be found here.">
   <meta name="twitter:image" content="/img/meta_image.png">
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#emoji" class="md-skip">
+        <a href="#sync-on" class="md-skip">
           Skip to content
         </a>
       
@@ -123,7 +123,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Starboards
+              Roles for Badges
             
           </span>
         </div>
@@ -665,18 +665,6 @@
           
           
 
-
-  <li class="md-nav__item">
-    <a href="../roles-for-badges/" title="Roles for Badges" class="md-nav__link">
-      Roles for Badges
-    </a>
-  </li>
-
-        
-          
-          
-          
-
   
 
 
@@ -686,14 +674,14 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Starboards
+        Roles for Badges
         <span class="md-nav__icon md-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>
         </span>
       </label>
     
-    <a href="./" title="Starboards" class="md-nav__link md-nav__link--active">
-      Starboards
+    <a href="./" title="Roles for Badges" class="md-nav__link md-nav__link--active">
+      Roles for Badges
     </a>
     
       
@@ -710,29 +698,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#emoji" class="md-nav__link">
-    Emoji
+  <a href="#sync-on" class="md-nav__link">
+    Sync on
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#required-stars" class="md-nav__link">
-    Required stars
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#channel" class="md-nav__link">
-    Channel
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ignored-roles-ignored-channels" class="md-nav__link">
-    Ignored roles &amp; Ignored channels
+  <a href="#flags" class="md-nav__link">
+    Flags
   </a>
   
 </li>
@@ -741,6 +715,18 @@
   
 </nav>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../starboards/" title="Starboards" class="md-nav__link">
+      Starboards
+    </a>
   </li>
 
         
@@ -785,29 +771,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#emoji" class="md-nav__link">
-    Emoji
+  <a href="#sync-on" class="md-nav__link">
+    Sync on
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#required-stars" class="md-nav__link">
-    Required stars
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#channel" class="md-nav__link">
-    Channel
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ignored-roles-ignored-channels" class="md-nav__link">
-    Ignored roles &amp; Ignored channels
+  <a href="#flags" class="md-nav__link">
+    Flags
   </a>
   
 </li>
@@ -824,7 +796,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/Jack-Gledhill/captain/edit/master/docs/docs/config/starboards.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/Jack-Gledhill/captain/edit/master/docs/docs/config/roles-for-badges.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
                   </a>
                 
@@ -832,33 +804,101 @@
                   
                 
                 
-                  <h1>Starboards</h1>
+                  <h1>Roles for Badges</h1>
                 
-                <p>Starboars are a way to allow users to upvote messages by reacting to it, often using a star emoji. Once a message has received enough upvotes (upvotes from bot accounts and the message author are ignored), it will be posted to a special channel.</p>
-<p>This essentially allows the community to save funny, memey or otherwise important messages so that they can easily be found again.</p>
+                <p><code>roles_for_badges</code> is a system I invented to assign roles to users depending on the Discord badges they have. For example, Discord Partners will receive a role called "Discord Partner", or something along those lines.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-<div class="highlight"><pre><span></span><code><span class="nt">starboard</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">roles_for_badges</span><span class="p">:</span>
     <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">emoji</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">⭐</span> <span class="c1"># unicode emoji or custom emoji (&lt;:name:id&gt;)</span>
-    <span class="nt">required_stars</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-    <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
-
-    <span class="nt">ignored_roles</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-    <span class="nt">ignored_channels</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+    <span class="nt">sync_on</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">JOIN</span>
+    <span class="nt">flags</span><span class="p">:</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">64</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">128</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">256</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">512</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">16384</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">131072</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
 </code></pre></div>
 
 </div>
-<h2 id="emoji">Emoji<a class="headerlink" href="#emoji" title="Permanent link">&para;</a></h2>
-<p>This is the emoji that users will need to react with in order to upvote a message. It could be a unicode emoji, or a custom Discord emoji in the format <code>&lt;:name:id&gt;</code>.</p>
-<h2 id="required-stars">Required stars<a class="headerlink" href="#required-stars" title="Permanent link">&para;</a></h2>
-<p>This is pretty obvious. The number represents how many stars are required for a message to be posted to the starboard channel.</p>
-<h2 id="channel">Channel<a class="headerlink" href="#channel" title="Permanent link">&para;</a></h2>
-<p>This is the ID of the starboard channel where starred messages are sent.</p>
-<h2 id="ignored-roles-ignored-channels">Ignored roles &amp; Ignored channels<a class="headerlink" href="#ignored-roles-ignored-channels" title="Permanent link">&para;</a></h2>
-<p>These two are pretty simple. Ignored roles is a list of roles that cannot star messages (if a user has any of these roles, their upvote will be ignored). Similarly, ignored channels is a list of channels where messages cannot be uploaded to the starboard channel.</p>
+<h2 id="sync-on">Sync on<a class="headerlink" href="#sync-on" title="Permanent link">&para;</a></h2>
+<p>This option specifies a list of events where Captain can automatically synchronise a user's roles. See the table below for reference.</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User joined</td>
+<td>JOIN</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Due to a limitation with the Discord API, there's no sane way to update a user's roles when they receive a new badge (or lose one).</p>
+</div>
+<h2 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h2>
+<p>This is a key-value mapping where the key is the flag integer used by the Discord API to denote a specific badge. E.g. 1 = Discord Staff, see the table below for info. The value should be the role that corresponds with the flag.</p>
+<table>
+<thead>
+<tr>
+<th>Badge</th>
+<th>Flag</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discord Staff</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Discord Partner</td>
+<td>2</td>
+</tr>
+<tr>
+<td>HS Events</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Bug Hunter</td>
+<td>8</td>
+</tr>
+<tr>
+<td>HS Bravery</td>
+<td>64</td>
+</tr>
+<tr>
+<td>HS Brilliance</td>
+<td>128</td>
+</tr>
+<tr>
+<td>HS Balance</td>
+<td>256</td>
+</tr>
+<tr>
+<td>Early Supporter</td>
+<td>512</td>
+</tr>
+<tr>
+<td>Bug Hunter Lvl 2</td>
+<td>16384</td>
+</tr>
+<tr>
+<td>Verified Bot Dev</td>
+<td>131072</td>
+</tr>
+</tbody>
+</table>
                 
                   
                     
@@ -867,7 +907,7 @@
 <div class="md-source-date">
   <small>
     
-      Last update: August 26, 2020
+      Last update: September 3, 2020
     
   </small>
 </div>
@@ -890,7 +930,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../roles-for-badges/" title="Roles for Badges" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../reaction-roles/" title="Reaction Roles" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
             </div>
@@ -899,19 +939,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Roles for Badges
+                Reaction Roles
               </div>
             </div>
           </a>
         
         
-          <a href="../stat-counters/" title="Stat Counters" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../starboards/" title="Starboards" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Stat Counters
+                Starboards
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

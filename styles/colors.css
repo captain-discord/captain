@@ -16,3 +16,19 @@
 .md-announce a:hover {
 	color: white;
 }
+
+.added {
+	color: #62f5a9;
+}
+.changed {
+	color: #f3d448;
+}
+.deprecated {
+	color: #fab163;
+}
+.removed {
+	color: #fc7070;
+}
+.fixed {
+	color: #6168f7;
+}
