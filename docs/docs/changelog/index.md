@@ -1,5 +1,6 @@
 Below, you'll be able to read the latest patch notes and see what changes have been made!
 
+* [Release v3.3.2](/changelog/v3.3.2)  
 * [Release v3.3.1](/changelog/v3.3.1)  
 * [Release v3.3.0](/changelog/v3.3.0)  
 * [Release v3.2.0](/changelog/v3.2.0)  

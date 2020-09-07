@@ -32,24 +32,6 @@ class Plugin(commands.Cog):
 		await ctx.success("Shutting down, later taters!")
 		await self.bot.shutdown()
 
-	@control.group("reload",
-		usage="reload",
-		invoke_without_command=True
-	)
-	async def control_reload(self, ctx):
-		"""Allows bot owners to reload certain config files."""
-
-		raise MissingSubcommand()
-
-	@control_reload.command("guilds",
-		usage="guilds"
-	)
-	async def control_reload_guilds(self, ctx):
-		"""Reloads the guilds.yml file containing guild configurations."""
-
-		self.bot.configs = safe_load(open("guilds.yml"))
-		await ctx.success("The `guilds.yml` file has been reloaded!")
-
 
 def setup(bot):
 	bot.add_cog(Plugin(bot))
