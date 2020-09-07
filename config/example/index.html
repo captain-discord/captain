@@ -49,28 +49,23 @@
       
     
     
-  
-  
-    
-  
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="">
+	<meta property="og:description" content="Any documentation for Captain Bot can be found here.">
+	<meta property="og:url" content="None">
+	<meta property="og:image" content="/img/meta_image.png">
+	<meta property="og:image:type" content="image/png">
+	<meta property="og:image:width" content="650">
+	<meta property="og:image:height" content="650">
 
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Captain Bot Documentation - Example Configuration">
-  <meta property="og:description" content="Any documentation for Captain Bot can be found here.">
-  <meta property="og:url" content="None">
-  <meta property="og:image" content="/img/meta_image.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="650">
-  <meta property="og:image:height" content="650">
+	<meta property="theme-color" content="#7289DA">
 
-  <meta property="theme-color" content="#7289DA">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="docs.captainbot.xyz">
-  <meta name="twitter:creator" content="JackTEKhill">
-  <meta name="twitter:title" content="Captain Bot Documentation - Example Configuration">
-  <meta name="twitter:description" content="Any documentation for Captain Bot can be found here.">
-  <meta name="twitter:image" content="/img/meta_image.png">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="docs.captainbot.xyz">
+	<meta name="twitter:creator" content="JackTEKhill">
+	<meta name="twitter:title" content="">
+	<meta name="twitter:description" content="Any documentation for Captain Bot can be found here.">
+	<meta name="twitter:image" content="/img/meta_image.png">
 
   </head>
   
@@ -94,7 +89,7 @@
         <aside class="md-announce">
           <div class="md-announce__inner md-grid md-typeset">
             
-	<a href="https://discord.gg/pWraGYX">
+	<a href="https://discord.gg/EBFhZYY">
 		For updates join the official
 		<span class="twemoji discord">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M297.216 243.2c0 15.616-11.52 28.416-26.112 28.416-14.336 0-26.112-12.8-26.112-28.416s11.52-28.416 26.112-28.416c14.592 0 26.112 12.8 26.112 28.416zm-119.552-28.416c-14.592 0-26.112 12.8-26.112 28.416s11.776 28.416 26.112 28.416c14.592 0 26.112-12.8 26.112-28.416.256-15.616-11.52-28.416-26.112-28.416zM448 52.736V512c-64.494-56.994-43.868-38.128-118.784-107.776l13.568 47.36H52.48C23.552 451.584 0 428.032 0 398.848V52.736C0 23.552 23.552 0 52.48 0h343.04C424.448 0 448 23.552 448 52.736zm-72.96 242.688c0-82.432-36.864-149.248-36.864-149.248-36.864-27.648-71.936-26.88-71.936-26.88l-3.584 4.096c43.52 13.312 63.744 32.512 63.744 32.512-60.811-33.329-132.244-33.335-191.232-7.424-9.472 4.352-15.104 7.424-15.104 7.424s21.248-20.224 67.328-33.536l-2.56-3.072s-35.072-.768-71.936 26.88c0 0-36.864 66.816-36.864 149.248 0 0 21.504 37.12 78.08 38.912 0 0 9.472-11.52 17.152-21.248-32.512-9.728-44.8-30.208-44.8-30.208 3.766 2.636 9.976 6.053 10.496 6.4 43.21 24.198 104.588 32.126 159.744 8.96 8.96-3.328 18.944-8.192 29.44-15.104 0 0-12.8 20.992-46.336 30.464 7.68 9.728 16.896 20.736 16.896 20.736 56.576-1.792 78.336-38.912 78.336-38.912z"/></svg>
@@ -369,6 +364,18 @@
   <li class="md-nav__item">
     <a href="../../changelog/" title="All Releases" class="md-nav__link">
       All Releases
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../changelog/v3.3.1/" title="Release v3.3.1" class="md-nav__link">
+      Release v3.3.1
     </a>
   </li>
 
@@ -730,6 +737,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../web/" title="Web" class="md-nav__link">
+      Web
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -792,200 +811,208 @@
 <span class="c1"># 0 = add role</span>
 <span class="c1"># 1 = remove role</span>
 
-<span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># server ID</span>
-    <span class="nt">nickname</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Captain Hook</span> <span class="c1"># any text you want (max 32 chars)</span>
+<span class="c1"># Web Access</span>
+<span class="c1"># ----------</span>
+<span class="c1"># 0 = view and edit</span>
+<span class="c1"># 1 = view only</span>
 
-    <span class="nt">gatekeeper</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">nickname</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Captain Hook</span> <span class="c1"># any text you want (max 32 chars)</span>
 
-        <span class="nt">min_age</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">604800</span>
-        <span class="nt">checks_for_bypass</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span> <span class="c1"># null will disable auto-bypassing</span>
+<span class="nt">web</span><span class="p">:</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># user ID</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span> <span class="c1"># user ID</span>
 
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-        <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-        <span class="nt">role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+<span class="nt">gatekeeper</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 
-        <span class="nt">extras</span><span class="p">:</span>
-            <span class="nt">char_length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
-            <span class="nt">noise</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.6</span>
-            <span class="nt">attempts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+    <span class="nt">min_age</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">604800</span>
+    <span class="nt">checks_for_bypass</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span> <span class="c1"># null will disable auto-bypassing</span>
 
-    <span class="nt">bot_filter</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">require_verification</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">min_age</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">86400</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
 
-        <span class="nt">whitelist</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># bot ID</span>
+    <span class="nt">extras</span><span class="p">:</span>
+        <span class="nt">char_length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
+        <span class="nt">noise</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.6</span>
+        <span class="nt">attempts</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
 
-    <span class="nt">roles_for_badges</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">sync_on</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">JOIN</span>
-        <span class="nt">flags</span><span class="p">:</span>
-            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">64</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">128</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">256</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">512</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">16384</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-            <span class="nt">131072</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+<span class="nt">bot_filter</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">require_verification</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">min_age</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">86400</span>
 
-    <span class="nt">access_control</span><span class="p">:</span>
-        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
-            <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
-            <span class="nt">overwrites</span><span class="p">:</span>
-                <span class="nt">ping</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span> <span class="c1"># command name: true or false</span>
-        <span class="nt">everyone</span><span class="p">:</span> <span class="c1"># or role ID</span>
-            <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="nt">whitelist</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># bot ID</span>
 
-    <span class="nt">infractions</span><span class="p">:</span>
-        <span class="nt">mute_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-        <span class="nt">ban_purge_days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="nt">roles_for_badges</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">sync_on</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">JOIN</span>
+    <span class="nt">flags</span><span class="p">:</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">64</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">128</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">256</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">512</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">16384</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="nt">131072</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
 
-    <span class="nt">auto_roles</span><span class="p">:</span> 
-        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">HUMAN</span>
-        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">BOT</span>
+<span class="nt">access_control</span><span class="p">:</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
+        <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
+        <span class="nt">overwrites</span><span class="p">:</span>
+            <span class="nt">ping</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span> <span class="c1"># command name: true or false</span>
+    <span class="nt">everyone</span><span class="p">:</span> <span class="c1"># or role ID</span>
+        <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
 
-    <span class="nt">reaction_roles</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
-        <span class="nt">message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># message ID</span>
-        <span class="nt">roles</span><span class="p">:</span>
-            <span class="nt">123456789098765432</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">✅</span> <span class="c1"># role ID: unicode emoji or custom emoji (&lt;:name:id&gt;)</span>
+<span class="nt">infractions</span><span class="p">:</span>
+    <span class="nt">mute_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+    <span class="nt">ban_purge_days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
 
-    <span class="nt">starboard</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">emoji</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">⭐</span> <span class="c1"># unicode emoji or custom emoji (&lt;:name:id&gt;)</span>
-        <span class="nt">required_stars</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-        <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+<span class="nt">auto_roles</span><span class="p">:</span> 
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">HUMAN</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># role ID</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">BOT</span>
 
-        <span class="nt">ignored_roles</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-        <span class="nt">ignored_channels</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+<span class="nt">reaction_roles</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+    <span class="nt">message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># message ID</span>
+    <span class="nt">roles</span><span class="p">:</span>
+        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">✅</span> <span class="c1"># role ID: unicode emoji or custom emoji (&lt;:name:id&gt;)</span>
 
-    <span class="nt">lockdown</span><span class="p">:</span>
-        <span class="nt">locked_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">everyone</span> <span class="c1"># or role ID</span>
-        <span class="nt">whitelist</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+<span class="nt">starboard</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">emoji</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">⭐</span> <span class="c1"># unicode emoji or custom emoji (&lt;:name:id&gt;)</span>
+    <span class="nt">required_stars</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">channel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
 
-    <span class="nt">anti_spam</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-        <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+    <span class="nt">ignored_roles</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+    <span class="nt">ignored_channels</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
 
-        <span class="nt">count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-        <span class="nt">threshold</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="nt">lockdown</span><span class="p">:</span>
+    <span class="nt">locked_role</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">everyone</span> <span class="c1"># or role ID</span>
+    <span class="nt">whitelist</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
 
-        <span class="nt">ignored_roles</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-        <span class="nt">ignored_channels</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+<span class="nt">anti_spam</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
 
-    <span class="nt">anti_ping_spam</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-        <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+    <span class="nt">count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+    <span class="nt">threshold</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
 
-        <span class="nt">count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
-        <span class="nt">threshold</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+    <span class="nt">ignored_roles</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+    <span class="nt">ignored_channels</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
 
-        <span class="nt">ignored_roles</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-        <span class="nt">ignored_channels</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+<span class="nt">anti_ping_spam</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
 
-    <span class="nt">anti_curse</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-        <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+    <span class="nt">count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+    <span class="nt">threshold</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
 
-        <span class="nt">ignored_roles</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-        <span class="nt">ignored_channels</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
-        <span class="nt">blacklist</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nigga</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">faggot</span>
+    <span class="nt">ignored_roles</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+    <span class="nt">ignored_channels</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
 
-    <span class="nt">anti_invite</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-        <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="nt">anti_curse</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
 
-        <span class="nt">ignored_roles</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-        <span class="nt">ignored_channels</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
-        <span class="nt">whitelist</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">discord-developers</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">discord-testers</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">discord-events</span>
+    <span class="nt">ignored_roles</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+    <span class="nt">ignored_channels</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+    <span class="nt">blacklist</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nigga</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">faggot</span>
 
-    <span class="nt">anti_link</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-        <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="nt">anti_invite</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
 
-        <span class="nt">ignored_roles</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
-        <span class="nt">ignored_channels</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
-        <span class="nt">whitelist</span><span class="p">:</span> 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://captainbot.xyz</span>
+    <span class="nt">ignored_roles</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+    <span class="nt">ignored_channels</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+    <span class="nt">whitelist</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">discord-developers</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">discord-testers</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">discord-events</span>
 
-    <span class="nt">logs</span><span class="p">:</span>
-        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># text channel ID</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_BAN</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_TEMPBAN</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_BAN_EXPIRE</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_UNBAN</span>
+<span class="nt">anti_link</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">duration</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3600</span>
 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_KICK</span> 
+    <span class="nt">ignored_roles</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+    <span class="nt">ignored_channels</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># text channel ID</span>
+    <span class="nt">whitelist</span><span class="p">:</span> 
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://captainbot.xyz</span>
 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_MUTE</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_REMUTE</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_TEMPMUTE</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_MUTE_EXPIRE</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_UNMUTE</span>
+<span class="nt">logs</span><span class="p">:</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># text channel ID</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_BAN</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_TEMPBAN</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_BAN_EXPIRE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_UNBAN</span>
 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_WARN</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_KICK</span> 
 
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN_TEMP</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN_EXPIRE</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN_CANCEL</span>
-        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># text channel ID</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_JOIN</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_LEAVE</span>
-        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># text channel ID</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MESSAGE_EDIT</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MESSAGE_DELETE</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MESSAGE_BULK_DELETE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_MUTE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_REMUTE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_TEMPMUTE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_MUTE_EXPIRE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_UNMUTE</span>
 
-    <span class="nt">stat_counters</span><span class="p">:</span>
-        <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># voice channel ID</span>
-            <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_COUNT_CHANGE</span> <span class="c1"># BOT_COUNT_CHANGE, HUMAN_COUNT_CHANGE, NEWEST_BOT, NEWEST_HUMAN or NEWEST_MEMBER</span>
-            <span class="nt">format</span><span class="p">:</span> <span class="s">&quot;{value}&quot;</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_WARN</span>
 
-    <span class="nt">persistent_roles</span><span class="p">:</span>
-        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="nt">whitelist</span><span class="p">:</span>
-            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN_TEMP</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN_EXPIRE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOCKDOWN_CANCEL</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># text channel ID</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_JOIN</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_LEAVE</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># text channel ID</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MESSAGE_EDIT</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MESSAGE_DELETE</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MESSAGE_BULK_DELETE</span>
 
-    <span class="nt">custom_commands</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lorem</span>
-          <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-          <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;{ctx.author.mention}</span><span class="nv"> </span><span class="s">Lorem</span><span class="nv"> </span><span class="s">ipsum</span><span class="nv"> </span><span class="s">dolor</span><span class="nv"> </span><span class="s">sit</span><span class="nv"> </span><span class="s">amet&quot;</span>
-        <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipsum</span>
-          <span class="nt">action</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-          <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+<span class="nt">stat_counters</span><span class="p">:</span>
+    <span class="nt">123456789098765432</span><span class="p">:</span> <span class="c1"># voice channel ID</span>
+        <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MEMBER_COUNT_CHANGE</span> <span class="c1"># BOT_COUNT_CHANGE, HUMAN_COUNT_CHANGE, NEWEST_BOT, NEWEST_HUMAN or NEWEST_MEMBER</span>
+        <span class="nt">format</span><span class="p">:</span> <span class="s">&quot;{value}&quot;</span>
+
+<span class="nt">persistent_roles</span><span class="p">:</span>
+    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">whitelist</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
+
+<span class="nt">custom_commands</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lorem</span>
+        <span class="l l-Scalar l-Scalar-Plain">action</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="s">&quot;{ctx.author.mention}</span><span class="nv"> </span><span class="s">Lorem</span><span class="nv"> </span><span class="s">ipsum</span><span class="nv"> </span><span class="s">dolor</span><span class="nv"> </span><span class="s">sit</span><span class="nv"> </span><span class="s">amet&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipsum</span>
+        <span class="l l-Scalar l-Scalar-Plain">action</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+        <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">123456789098765432</span> <span class="c1"># role ID</span>
 </code></pre></div>
                 
                   
