@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block base_body_content %}
+	<div class="d-flex" id="wrapper">
+		{% include "extends/sidebar.html" %}
+	
+		<div id="page-content-wrapper">
+			{% include "extends/navbar.html" %}
+
+			<div class="container-fluid">
+				<div class="card">
+					<div class="card-header">Infractions</div>
+
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-sm table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Actor</th>
+										<th scope="col">Target</th>
+										<th scope="col">Type</th>
+										<th scope="col">Created at</th>
+										<th scope="col">Reason</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for inf in infractions %}
+										<tr>
+											<td>{{ inf[0] }}</td>
+											<td>{{ inf[1] }}</td>
+											<td>{{ inf[2] }}</td>
+											<td>{{ inf[3] }}</td>
+											<td>{{ inf[4] }}</td>
+											<td>{{ inf[5] }}</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
+{% endblock %}

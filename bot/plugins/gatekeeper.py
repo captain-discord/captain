@@ -48,27 +48,29 @@ class GatekeeperManifest:
 		return len([c for c in self.checks if c is None])
 
 class Config:
-	def __init__(self, bot, guild):
+	def __init__(self, bot, guild, config):
 		self.bot = bot
 		self.guild = guild
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		raw = config.get("gatekeeper", {})
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("gatekeeper", {})
+		self.enabled = raw.get("enabled", False)
 
-		self.enabled = self.raw.get("enabled", False)
+		self.min_age = raw.get("min_age", 604800)
+		self.checks_for_bypass = raw.get("checks_for_bypass", 2)
 
-		self.min_age = self.raw.get("min_age", 604800)
-		self.checks_for_bypass = self.raw.get("checks_for_bypass", 2)
+		self.action = raw.get("action", 0)
+		self.type = raw.get("type", 0)
+		self.role = guild.get_role(raw.get("role"))
 
-		self.action = self.raw.get("action", 0)
-		self.type = self.raw.get("type", 0)
-		self.role = guild.get_role(self.raw.get("role"))
-
-		self.extras = self.raw.get("extras", {})
+		self.extras = raw.get("extras", {})
 
 		self._captcha_locks = set()
+
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 	async def verify(self, member):
 		if self.action == ActionEnum.ADD_ROLE:
@@ -179,7 +181,7 @@ class Plugin(commands.Cog, name="User Verification"):
 	async def verify_me(self, ctx):
 		"""Activates gatekeeper for yourself."""
 
-		config = Config(self.bot, ctx.guild)
+		config = await Config.new(self.bot, ctx.guild)
 
 		if config.role is None:
 			raise NotConfigured("gatekeeper.role")
@@ -203,7 +205,7 @@ class Plugin(commands.Cog, name="User Verification"):
 	):
 		"""Bypasses gatekeeper for a specific user."""
 
-		config = Config(self.bot, ctx.guild)
+		config = await Config.new(self.bot, ctx.guild)
 		if config.role is None:
 			raise NotConfigured("gatekeeper.role")
 
@@ -219,7 +221,7 @@ class Plugin(commands.Cog, name="User Verification"):
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
-		config = Config(self.bot, member.guild)
+		config = await Config.new(self.bot, member.guild)
 		if not config.enabled or config.role is None or not member.guild.me.guild_permissions.manage_roles or member.bot:
 			return
 

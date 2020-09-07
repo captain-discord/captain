@@ -6,14 +6,16 @@ from ext.utils import ordinal_indicator, time_since
 
 
 class Handler:
-	def __init__(self, bot, guild):
+	def __init__(self, bot, guild, config):
 		self.bot = bot
 		self.guild = guild
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		self.logs = {self.guild.get_channel(cid): e for cid, e in config.get("logs", {}).items()}
 
-		self.logs = {self.guild.get_channel(cid): e for cid, e in bot.configs.get(self.guild.id, {}).get("logs", {}).items()}
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 	def dm_fail_format(self, event, target):
 		base = self.bot.actions.get("dm_fail_base")
@@ -80,7 +82,8 @@ class Plugin(commands.Cog):
 		if after.content == before.content:
 			return
 		
-		await Handler(self.bot, after.guild).dispatch("MESSAGE_EDIT",
+		log = await Handler.new(self.bot, after.guild)
+		await log.dispatch("MESSAGE_EDIT",
 			before=before,
 			after=after
 		)
@@ -90,27 +93,31 @@ class Plugin(commands.Cog):
 		if not message.content:
 			return
 		
-		await Handler(self.bot, message.guild).dispatch("MESSAGE_DELETE",
+		log = await Handler.new(self.bot, message.guild)
+		await log.dispatch("MESSAGE_DELETE",
 			message=message
 		)
 
 	@commands.Cog.listener()
 	async def on_raw_bulk_message_delete(self, payload):
-		await Handler(self.bot, payload.guild_id).dispatch("MESSAGE_BULK_DELETE",
+		log = await Handler.new(self.bot, payload.guild_id)
+		await log.dispatch("MESSAGE_BULK_DELETE",
 			amount=len(payload.message_ids),
 			channel=self.bot.get_channel(payload.channel_id)
 		)
 	
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
-		await Handler(self.bot, member.guild).dispatch("MEMBER_JOIN",
+		log = await Handler.new(self.bot, member.guild)
+		await log.dispatch("MEMBER_JOIN",
 			user=member,
 			ordinal=ordinal_indicator(member.guild.member_count)
 		)
 
 	@commands.Cog.listener()
 	async def on_member_remove(self, member):
-		await Handler(self.bot, member.guild).dispatch("MEMBER_LEAVE",
+		log = await Handler.new(self.bot, member.guild)
+		await log.dispatch("MEMBER_LEAVE",
 			user=member,
 			joined_ago=time_since(since=member.joined_at)
 		)
@@ -126,7 +133,8 @@ class Plugin(commands.Cog):
 			event = "CHANNEL_DELETE"
 			kwargs = {"channel": channel_or_role}
 
-		await Handler(self.bot, channel_or_role.guild).dispatch(event,
+		log = await Handler.new(self.bot, channel_or_role.guild)
+		await log.dispatch(event,
 			**kwargs
 		)
 
@@ -141,7 +149,8 @@ class Plugin(commands.Cog):
 			event = "CHANNEL_CREATE"
 			kwargs = {"channel": channel_or_role}
 
-		await Handler(self.bot, channel_or_role.guild).dispatch(event,
+		log = await Handler.new(self.bot, channel_or_role.guild)
+		await log.dispatch(event,
 			**kwargs
 		)
 
@@ -172,7 +181,8 @@ class Plugin(commands.Cog):
 				"after": after.nick
 			}
 
-		await Handler(self.bot, after.guild).dispatch(event,
+		log = await Handler.new(self.bot, after.guild)
+		await log.dispatch(event,
 			**kwargs
 		)
 

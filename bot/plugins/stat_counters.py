@@ -11,14 +11,13 @@ class Counter:
 		self.format = options.get("format")
 
 class Config:
-	def __init__(self, bot, guild):
-		self.guild = guild
+	def __init__(self, bot, guild, config):
+		self.counters = [Counter(bot, id, **options) for id, options in config.get("stat_counters", {}).items()]
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
-
-		self.raw = bot.configs.get(self.guild.id, {}).get("stat_counters", {})
-		self.counters = [Counter(bot, id, **options) for id, options in self.raw.items()]
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 	def get(self, events):
 		return [c for c in self.counters if c.event in events]
@@ -30,7 +29,7 @@ class Plugin(commands.Cog):
 	@commands.Cog.listener("on_member_remove")
 	@commands.Cog.listener("on_member_join")
 	async def on_member_count_change(self, member):
-		config = Config(self.bot, member.guild)
+		config = await Config.new(self.bot, member.guild)
 
 		events = ["MEMBER_COUNT_CHANGE"]
 		if member not in member.guild.members:

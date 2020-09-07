@@ -27,9 +27,8 @@ Pros:
 Cons:
 
 * You have to rely on someone's upkeep of the bot;
-* You can't change your guild's configuration when you want (this may change in the future);
 * You have to actually find someone who will let you use their instance
 
 ## Summary
 
-All in all, if you have the technical skill required, it is better to run your own. However, if you don't have the skill and really need the bot, you can contact me in the [official Discord server](https://discord.gg/pWraGYX) and I will arrange for you to use the official instance.
+All in all, if you have the technical skill required, it is better to run your own. However, if you don't have the skill and really need the bot, you can contact me in the [official Discord server](https://discord.gg/EBFhZYY) and I will arrange for you to use the official instance.

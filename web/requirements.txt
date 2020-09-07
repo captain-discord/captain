@@ -1,0 +1,4 @@
+flask
+requests-oauthlib
+psycopg2-binary
+pyyaml

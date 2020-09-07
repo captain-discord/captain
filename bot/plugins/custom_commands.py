@@ -29,15 +29,13 @@ class Command:
 		return result
 
 class Config:
-	def __init__(self, bot, guild):
-		self.bot = bot
-		self.guild = guild
+	def __init__(self, bot, guild, config):
+		self.commands = [Command(bot, **c) for c in config.get("custom_commands", [])]
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
-
-		self.raw = bot.configs.get(self.guild.id, {}).get("custom_commands", [])
-		self.commands = [Command(bot, **c) for c in self.raw]
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 
 class Plugin(commands.Cog):
@@ -46,7 +44,7 @@ class Plugin(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message(self, message):
-		config = Config(self.bot, message.guild)
+		config = await Config.new(self.bot, message.guild)
 
 		if not config.commands:
 			return

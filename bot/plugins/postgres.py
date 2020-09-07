@@ -1,10 +1,29 @@
+import discord
+
 from asyncpg import create_pool
 from discord.ext import commands
+from yaml import safe_load
 
 
 class Plugin(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+
+		self.bot.get_config = self._get_config
+
+	async def _get_config(self, id):
+		async with self.bot.postgres.acquire() as con:
+			query = """SELECT config FROM guild_configs
+					   WHERE id = $1;"""
+
+			if isinstance(id, discord.Guild):
+				id = id.id
+
+			result = await con.fetchval(query, id)
+			if result is None:
+				return {}
+
+			return safe_load(result)
 
 	@commands.Cog.listener()
 	async def on_postgres_connect(self):

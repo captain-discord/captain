@@ -96,22 +96,21 @@ def create_message(message, stars):
 
 
 class Config:
-	def __init__(self, bot, guild):
-		self.bot = bot
-		self.guild = guild
+	def __init__(self, bot, guild, config):
+		raw = config.get("starboard", {})
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		self.enabled = raw.get("enabled", False)
+		self.emoji = raw.get("emoji", "⭐")
+		self.required = raw.get("required_stars", 3)
+		self.channel = bot.get_channel(raw.get("channel"))
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("starboard", {})
+		self.ignored_roles = list(filter(None, [guild.get_role(r) for r in raw.get("ignored_roles", [])]))
+		self.ignored_channels = list(filter(None, [guild.get_channel(c) for c in raw.get("ignored_channels", [])]))
 
-		self.enabled = self.raw.get("enabled", False)
-		self.emoji = self.raw.get("emoji", "⭐")
-		self.required = self.raw.get("required_stars", 3)
-		self.channel = bot.get_channel(self.raw.get("channel"))
-
-		self.ignored_roles = list(filter(None, [self.guild.get_role(r) for r in self.raw.get("ignored_roles", [])]))
-		self.ignored_channels = list(filter(None, [self.guild.get_channel(c) for c in self.raw.get("ignored_channels", [])]))
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 	def is_ignored(self, user, channel):
 		if channel in self.ignored_channels:
@@ -133,7 +132,7 @@ class Plugin(commands.Cog):
 		if payload.guild_id is None:
 			return
 
-		config = Config(self.bot, payload.guild_id)
+		config = await Config.new(self.bot, payload.guild_id)
 
 		if not config.enabled or config.channel is None or payload.channel_id == config.channel.id:
 			return
@@ -167,7 +166,7 @@ class Plugin(commands.Cog):
 		if payload.guild_id is None:
 			return
 
-		config = Config(self.bot, payload.guild_id)
+		config = await Config.new(self.bot, payload.guild_id)
 
 		if not config.enabled or config.channel is None or str(payload.emoji) != config.emoji or payload.channel_id == config.channel.id:
 			return

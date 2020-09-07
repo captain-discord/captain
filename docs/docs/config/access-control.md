@@ -52,7 +52,7 @@ Alright so this look a little scary at first, but I promise it isn't!
 
 To summarise, the example above essentially means: `trial mods can use all mod commands apart from ban, unban, inf search and inf recent`. 
 
-If you're still struggling, the good guys and gals in the [official Discord server](https://discord.gg/pWraGYX) can give you a hand!
+If you're still struggling, the good guys and gals in the [official Discord server](https://discord.gg/EBFhZYY) can give you a hand!
 
 ## Hierarchy
 

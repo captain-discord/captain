@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block head %}
+	<link rel="stylesheet" href="/static/css/guilds.css">
+{% endblock %}
+
+{% block base_body_content %}
+	<div class="d-flex" id="wrapper">
+		{% include "extends/sidebar.html" %}
+	
+		<div id="page-content-wrapper">
+			{% include "extends/navbar.html" %}
+
+			<div class="container-fluid">
+				<h1>Dashboard</h1>
+				<hr>
+
+				<div class="card">
+					<div class="card-header">
+						Guilds
+					</div>
+
+					<div class="card-body table-responsive">
+						<table class="table table-sm table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Name</th>
+									<th scope="col">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for guild in guilds %}
+									{% set id = guild.get("id") %}
+
+									<tr>
+										<td>{{ id }}</td>
+										<td>{{ guild.get("name") }}</td>
+										<td>
+											<a href="/dash/{{ id }}" title="Overview">
+												<button type="button" class="btn btn-sm btn-success rounded-circle">
+													<i class="fas fa-info"></i>
+												</button>
+											</a>
+
+											<a href="/dash/{{ id }}/config" title="Configure">
+												<button type="button" class="btn btn-sm btn-info rounded-circle">
+													<i class="fas fa-cog"></i>
+												</button>
+											</a>
+
+											<a href="/dash/{{ id }}/infractions" title="Infractions">
+												<button type="button" class="btn btn-sm btn-warning rounded-circle">
+													<i class="fas fa-gavel"></i>
+												</button>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

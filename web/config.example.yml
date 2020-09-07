@@ -1,0 +1,7 @@
+oauth2:
+    client_id: 123456789098765432
+    client_secret: youshallnotpass
+    redirect_uri: https://dash.captainbot.xyz
+    bot_token: no-token.4.u
+    
+postgres: postgres://someuser:youshallnotpass@127.0.0.1:5432/captain

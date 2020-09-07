@@ -6,19 +6,18 @@ from ext.utils import first
 
 
 class Config:
-	def __init__(self, bot, guild):
-		self.bot = bot
-		self.guild = guild
+	def __init__(self, guild, config):
+		raw = config.get("reaction_roles", {})
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		self.enabled = raw.get("enabled", False)
+		self.channel = guild.get_channel(raw.get("channel"))
+		self.message_id = raw.get("message")
+		self.roles = {guild.get_role(r): e for r, e in raw.get("roles", {}).items()}
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("reaction_roles", {})
-
-		self.enabled = self.raw.get("enabled", False)
-		self.channel = self.guild.get_channel(self.raw.get("channel"))
-		self.message_id = self.raw.get("message")
-		self.roles = {self.guild.get_role(r): e for r, e in self.raw.get("roles", {}).items()}
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(guild, config)
 
 	async def message(self):
 		if self.channel is not None:
@@ -49,7 +48,7 @@ class Plugin(commands.Cog):
 			return
 
 		guild = self.bot.get_guild(payload.guild_id)
-		config = Config(self.bot, guild)
+		config = await Config.new(self.bot, guild)
 
 		if payload.message_id != config.message_id or not config.enabled:
 			return

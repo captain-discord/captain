@@ -8,16 +8,16 @@ from plugins.infractions import Handler as InfractionHandler
 
 
 class Config:
-	def __init__(self, bot, guild):
-		self.guild = guild
-
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
-
-		self.raw = bot.configs.get(self.guild.id, {}).get("persistent_roles", {})
+	def __init__(self, guild, config):
+		raw = config.get("persistent_roles", {})
 		
-		self.enabled = self.raw.get("enabled", False)
-		self.whitelist = list(filter(None, [self.guild.get_role(r) for r in self.raw.get("whitelist", [])]))
+		self.enabled = raw.get("enabled", False)
+		self.whitelist = list(filter(None, [guild.get_role(r) for r in raw.get("whitelist", [])]))
+
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(guild, config)
 
 
 class Plugin(commands.Cog):
@@ -28,7 +28,7 @@ class Plugin(commands.Cog):
 		if not member.guild.me.guild_permissions.manage_roles:
 			return
 
-		config = Config(self.bot, member.guild)
+		config = await Config.new(self.bot, member.guild)
 
 		if not config.enabled:
 			return
@@ -67,8 +67,10 @@ class Plugin(commands.Cog):
 		if not member.guild.me.guild_permissions.manage_roles:
 			return
 
-		config = Config(self.bot, member.guild)
-		mute_role = InfractionHandler(self.bot, member.guild).mute_role
+		config = await Config.new(self.bot, member.guild)
+		handler = await InfractionHandler.new(self.bot, member.guild)
+		
+		mute_role = handler.mute_role
 
 		if not config.enabled:
 			return
@@ -95,7 +97,8 @@ class Plugin(commands.Cog):
 				continue
 
 			if role == mute_role:
-				await LoggingHandler(self.bot, member.guild).dispatch("MEMBER_REMUTE",
+				log = await LoggingHandler.new(self.bot, member.guild)
+				await log.dispatch("MEMBER_REMUTE",
 					user_to_dm=member,
 					target=member
 				)

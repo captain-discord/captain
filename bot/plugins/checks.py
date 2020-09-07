@@ -24,7 +24,7 @@ class Plugin(commands.Cog):
 		if await self.bot.is_owner(ctx.author):
 			return True
 
-		if ctx.guild.id not in self.bot.configs.keys():
+		if not await self.bot.get_config(ctx.guild):
 			raise NotConfigured()
 
 		return True

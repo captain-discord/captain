@@ -15,6 +15,7 @@ nav:
       
   - Changelog:
       All Releases: changelog/index.md
+      Release v3.3.0: changelog/v3.3.0.md
       Release v3.2.0: changelog/v3.2.0.md
       Release v3.1.1: changelog/v3.1.1.md
       Release v3.1.0: changelog/v3.1.0.md
@@ -27,6 +28,7 @@ nav:
 
   - Configuration:
       Introduction: config/index.md
+      Example Configuration: config/example.md
       Access Control: config/access-control.md
       Auto Mod: config/auto-mod.md
       Auto Roles: config/auto-roles.md
@@ -80,7 +82,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/Jack-Gledhill/captain
     - icon: fontawesome/brands/discord
-      link: https://discord.gg/pWraGYX
+      link: https://discord.gg/EBFhZYY
 
 plugins:
   - search

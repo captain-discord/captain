@@ -43,7 +43,8 @@ class Plugin(commands.Cog, name="Nickname Commands"):
 	@tasks.loop(seconds=300)
 	async def nickname_updater(self):
 		for guild in self.bot.guilds:
-			nick = self.bot.configs.get(guild.id, {}).get("nickname")
+			config = await self.bot.get_config(guild)
+			nick = config.get("nickname")
 			
 			if guild.me.guild_permissions.change_nickname:
 				await guild.me.edit(nick=nick)

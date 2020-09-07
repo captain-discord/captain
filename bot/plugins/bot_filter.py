@@ -5,20 +5,19 @@ from plugins.infractions import Handler as InfractionHandler
 
 
 class Config:
-	def __init__(self, bot, guild):
-		self.bot = bot
-		self.guild = guild
+	def __init__(self, guild, config):
+		raw = config.get("bot_filter", {})
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		self.enabled = raw.get("enabled", False)
+		self.require_verification = raw.get("require_verification", True)
+		self.min_age = raw.get("min_age", 86400)
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("bot_filter", {})
-
-		self.enabled = self.raw.get("enabled", False)
-		self.require_verification = self.raw.get("require_verification", True)
-		self.min_age = self.raw.get("min_age", 86400)
-
-		self.whitelist = self.raw.get("whitelist", [])
+		self.whitelist = raw.get("whitelist", [])
+	
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(guild, config)
 
 
 class Plugin(commands.Cog):
@@ -30,7 +29,7 @@ class Plugin(commands.Cog):
 		if not member.bot or not member.guild.me.guild_permissions.kick_members:
 			return
 
-		config = Config(self.bot, member.guild)
+		config = await Config.new(self.bot, member.guild)
 		handler = InfractionHandler(self.bot, member.guild)
 		
 		if not config.enabled or member.id in config.whitelist:

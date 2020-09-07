@@ -23,6 +23,12 @@ You'll also need a [PostgreSQL](https://postgres.org) server. In layman's terms,
 
 I use [this guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04) to get Docker up and running properly.
 
+## Docker Compose
+
+Docker Compose allows us to easily and quickly deploy several services at once with a single, easy to remember command. 
+
+See [this guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04) for setup instructions.
+
 ## Redis
 
 The final prerequisite is Redis. Redis is an in-memory database (in other words a cache) that Captain uses to temporarily store information for spam detection. You'll find that [this guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04) will prove useful.

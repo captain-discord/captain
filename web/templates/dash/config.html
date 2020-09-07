@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block base_body_content %}
+	<div class="d-flex" id="wrapper">
+		{% include "extends/sidebar.html" %}
+	
+		<div id="page-content-wrapper">
+			{% include "extends/navbar.html" %}
+
+			<div class="container-fluid">
+				<div id="success" class="alert alert-success d-none" role="alert">
+					All of your changes have been saved!
+				</div>
+
+				<div id="error" class="alert alert-danger d-none" role="alert">
+					Something went wrong when trying to save your changes!
+				</div>
+
+				<div class="card">
+					<div class="card-header">Configuration Editor</div>
+
+					<div class="card-body">
+						<pre>
+							<div id="e">{{ config }}</div>
+						</pre>
+					</div>
+
+					<div class="card-footer">
+						<button type="button" class="btn btn-success" onclick="updateConfig('{{ id }}')">
+							<i class="fas fa-check"></i> Save changes
+						</button>
+					</div>
+				</div>
+				
+				<script src="/static/js/config.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-whitespace.min.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-yaml.min.js"></script>
+				<script>
+					var e = ace.edit("e");
+
+					e.setTheme("ace/theme/twilight");
+					e.getSession().setMode("ace/mode/yaml");
+					e.setFontSize("20");
+					e.setOption("maxLines", 30);
+					e.setOption("minLines", 1);
+					e.focus();
+				</script>
+			</div>
+		</div>
+	</div>
+{% endblock %}

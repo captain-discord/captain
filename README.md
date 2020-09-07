@@ -2,11 +2,12 @@
 
 Captain is my own personal take on a cross between GearBot and Rowboat. Of course, this bot is still in development and will be for a very long time.
 
-**If you need support or wish to report a bug, please join my Discord server: https://discord.gg/pWraGYX**
+**If you need support or wish to report a bug, please join my Discord server: https://discord.gg/EBFhZYY**
 
 ## Features
 
 You didn't come here to listen to me chatter about the unimportant stuff, you want the feature list, well here it is:
+- A web dashboard so that you don't have to restart to change a guild's config
 - Ban, unban, softban, kick, mute, unmute and warn commands
 - Temporary muting, banning and lockdowns
 - Purge in the current channel, a different channel, from a user or by bots
@@ -28,7 +29,6 @@ You didn't come here to listen to me chatter about the unimportant stuff, you wa
 Here's what you can look forward to by clicking the Watch button in the top right hand corner:
 - Configurable strike system to punish users after x warnings
 - Anti links
-- A web dashboard so that you don't have to restart to change a guild's config
 - Leveling
 
 ## Who can host this?

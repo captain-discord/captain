@@ -6,8 +6,8 @@ from plugins.infractions import Handler as InfractionHandler
 
 
 class ConfigMixin:
-	def __init__(self, bot, guild, config):
-		self._handler = InfractionHandler(bot, guild)
+	def __init__(self, bot, guild, config, handler):
+		self._handler = handler
 
 		self.enabled = config.get("enabled", False)
 		self.duration = config.get("duration", None)
@@ -51,63 +51,68 @@ class CountMixin:
 		self.threshold = config.get("threshold", 5)
 
 class SpamConfig(ConfigMixin, CountMixin):
-	def __init__(self, bot, guild):
-		self.guild = guild
+	def __init__(self, bot, guild, config, handler):
+		raw = config.get("anti_spam", {})
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		ConfigMixin.__init__(self, bot, guild, raw, handler)
+		CountMixin.__init__(self, raw)
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("anti_spam", {})
-
-		ConfigMixin.__init__(self, bot, guild, self.raw)
-		CountMixin.__init__(self, self.raw)
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		handler = await InfractionHandler.new(bot, guild)
+		return cls(bot, guild, config, handler)
 
 class PingSpamConfig(ConfigMixin, CountMixin):
-	def __init__(self, bot, guild):
-		self.guild = guild
+	def __init__(self, bot, guild, config, handler):
+		raw = config.get("anti_ping_spam", {})
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
-
-		self.raw = bot.configs.get(self.guild.id, {}).get("anti_ping_spam", {})
-
-		ConfigMixin.__init__(self, bot, guild, self.raw)
-		CountMixin.__init__(self, self.raw)
+		ConfigMixin.__init__(self, bot, guild, raw, handler)
+		CountMixin.__init__(self, raw)
+	
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		handler = await InfractionHandler.new(bot, guild)
+		return cls(bot, guild, config, handler)
 
 class CurseConfig(ConfigMixin):
-	def __init__(self, bot, guild):
-		self.guild = guild
+	def __init__(self, bot, guild, config, handler):
+		raw = config.get("anti_curse", {})
+		self.blacklist = raw.get("blacklist", [])
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		ConfigMixin.__init__(self, bot, guild, raw, handler)
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("anti_curse", {})
-		self.blacklist = self.raw.get("blacklist", [])
-
-		ConfigMixin.__init__(self, bot, guild, self.raw)
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		handler = await InfractionHandler.new(bot, guild)
+		return cls(bot, guild, config, handler)
 
 class InviteConfig(ConfigMixin):
-	def __init__(self, bot, guild):
-		self.guild = guild
+	def __init__(self, bot, guild, config, handler):
+		raw = config.get("anti_invite", {})
+		self.whitelist = raw.get("whitelist", [])
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		ConfigMixin.__init__(self, bot, guild, raw, handler)
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("anti_invite", {})
-		self.whitelist = self.raw.get("whitelist", [])
-
-		ConfigMixin.__init__(self, bot, guild, self.raw)
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		handler = await InfractionHandler.new(bot, guild)
+		return cls(bot, guild, config, handler)
 
 class AutoRoleConfig:
-	def __init__(self, bot, guild):
-		self.guild = guild
+	def __init__(self, bot, guild, config):
+		raw = config.get("auto_roles", {})
+		
+		self.bot = list(filter(None, [guild.get_role(r) for r, e in raw.items() if "BOT" in e]))
+		self.human = list(filter(None, [guild.get_role(r) for r, e in raw.items() if "HUMAN" in e]))
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
-
-		self.raw = bot.configs.get(self.guild.id, {}).get("auto_roles", {})
-		self.bot = list(filter(None, [self.guild.get_role(r) for r, e in self.raw.items() if "BOT" in e]))
-		self.human = list(filter(None, [self.guild.get_role(r) for r, e in self.raw.items() if "HUMAN" in e]))
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 class Plugin(commands.Cog):
 	def __init__(self, bot):
@@ -118,7 +123,7 @@ class Plugin(commands.Cog):
 		if message.guild is None:
 			return
 
-		config = SpamConfig(self.bot, message.guild)
+		config = await SpamConfig.new(self.bot, message.guild)
 
 		if message.author in (self.bot.user, message.guild.owner) or not config.enabled or config.is_ignored(message.author, message.channel):
 			return
@@ -140,7 +145,7 @@ class Plugin(commands.Cog):
 		if message.guild is None:
 			return
 
-		config = PingSpamConfig(self.bot, message.guild)
+		config = await PingSpamConfig.new(self.bot, message.guild)
 
 		if message.author in (self.bot.user, message.guild.owner) or not message.mentions or not config.enabled or config.is_ignored(message.author, message.channel):
 			return
@@ -159,7 +164,7 @@ class Plugin(commands.Cog):
 		if message.guild is None:
 			return
 
-		config = CurseConfig(self.bot, message.guild)
+		config = await CurseConfig.new(self.bot, message.guild)
 
 		if message.author in (self.bot.user, message.guild.owner) or not config.enabled or config.is_ignored(message.author, message.channel):
 			return
@@ -176,7 +181,7 @@ class Plugin(commands.Cog):
 		if message.guild is None:
 			return
 
-		config = InviteConfig(self.bot, message.guild)
+		config = await InviteConfig.new(self.bot, message.guild)
 
 		if message.author in (self.bot.user, message.guild.owner) or not config.enabled or config.is_ignored(message.author, message.channel):
 			return
@@ -212,7 +217,7 @@ class Plugin(commands.Cog):
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
 		if member.guild.me.guild_permissions.manage_roles:
-			config = AutoRoleConfig(self.bot, member.guild)
+			config = await AutoRoleConfig.new(self.bot, member.guild)
 
 			if member.bot:
 				roles = config.bot
@@ -225,12 +230,12 @@ class Plugin(commands.Cog):
 	@commands.Cog.listener()
 	async def on_ready(self):
 		for guild in self.bot.guilds:
-			config = AutoRoleConfig(self.bot, guild)
+			config = await AutoRoleConfig.new(self.bot, guild)
 
 			if not config.human and not config.bot:
 				continue
 
-			for member in config.guild.members:
+			for member in guild.members:
 				if member.bot:
 					roles = config.bot
 

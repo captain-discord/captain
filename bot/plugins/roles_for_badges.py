@@ -30,18 +30,19 @@ class Flag:
 		self.role = guild.get_role(role)
 
 class Config:
-	def __init__(self, bot, guild):
+	def __init__(self, bot, guild, config):
 		self.bot = bot
-		self.guild = guild
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		raw = config.get("roles_for_badges", {})
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("roles_for_badges", {})
+		self.enabled = raw.get("enabled", False)
+		self.sync_on = raw.get("sync_on", [])
+		self.flags = [Flag(guild, f, r) for f, r in raw.get("flags", {}).items()]
 
-		self.enabled = self.raw.get("enabled", False)
-		self.sync_on = self.raw.get("sync_on", [])
-		self.flags = [Flag(self.guild, f, r) for f, r in self.raw.get("flags", {}).items()]
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 	async def sync(self, member, flag_override=None):
 		ALL_FLAGS = [1, 2, 4, 8, 64, 128, 256, 512, 16384, 131072]
@@ -139,7 +140,7 @@ class Plugin(commands.Cog, name="Roles for Badges"):
 		if member.bot:
 			return
 
-		config = Config(self.bot, member.guild)
+		config = await Config.new(self.bot, member.guild)
 		if config.enabled and "JOIN" in config.sync_on:
 			await config.sync(member)
 
@@ -176,7 +177,7 @@ class Plugin(commands.Cog, name="Roles for Badges"):
 			fetched_user = await self.bot.fetch_user(ctx.author.id)
 			fetched_flags = [f.value for f in fetched_user.public_flags.all()]
 
-			config = Config(self.bot, ctx.guild)
+			config = await Config.new(self.bot, ctx.guild)
 			assigned, removed = await config.sync(ctx.author, fetched_flags)
 
 			if not assigned and not removed:
@@ -200,7 +201,7 @@ class Plugin(commands.Cog, name="Roles for Badges"):
 			fetched_user = await self.bot.fetch_user(target.id)
 			fetched_flags = [f.value for f in fetched_user.public_flags.all()]
 
-			config = Config(self.bot, ctx.guild)
+			config = await Config.new(self.bot, ctx.guild)
 			assigned, removed = await config.sync(target, fetched_flags)
 
 			if not assigned and not removed:

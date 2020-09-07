@@ -1,3 +1,4 @@
+```yaml
 # Action ID guide
 # ---------------
 # 1 = ban
@@ -227,3 +228,4 @@
         - name: ipsum
           action: 1
           value: 123456789098765432 # role ID
+```

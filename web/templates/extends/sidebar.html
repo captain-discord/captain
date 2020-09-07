@@ -1,0 +1,40 @@
+<div class="bg-light border-right" id="sidebar-wrapper">
+	<div class="sidebar-heading border-bottom">Captain</div>
+
+	<div class="list-group list-group-flush">
+		<a class="list-group-item bg-light border-bottom" href="/dash">
+			<i class="fas fa-tachometer-alt"></i>
+			Dashboard
+		</a>
+
+		{% if id is defined %}
+			<a class="list-group-item bg-light border-bottom" href="/dash/{{ id }}">
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<i class="fas fa-info"></i>
+				Overivew
+			</a>
+
+			<a class="list-group-item bg-light border-bottom" href="/dash/{{ id }}/config">
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<i class="fas fa-cog"></i>
+				Config
+			</a>
+
+			<a class="list-group-item bg-light border-bottom" href="/dash/{{ id }}/infractions">
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<i class="fas fa-gavel"></i>
+				Infractions
+			</a>
+		{% endif %}
+
+		<a class="list-group-item bg-light border-bottom" href="https://docs.captainbot.xyz">
+			<i class="fas fa-book"></i>
+			Documentation
+		</a>
+
+		<a class="list-group-item bg-light border-bottom" href="https://discord.gg/EBFhZYY">
+			<i class="fas fa-comments"></i>
+			Discord Server
+		</a>
+	</div>
+</div>

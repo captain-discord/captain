@@ -1,0 +1,11 @@
+td a {
+	padding-left: 4px;
+}
+td a:hover {
+	text-decoration: none;
+}
+
+.btn {
+	width: 32px;
+	height: 32px;
+}

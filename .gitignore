@@ -1,6 +1,4 @@
 config.yml
-guilds.yml
-core/constants.py
 docs/site
 
 # Byte-compiled / optimized / DLL files

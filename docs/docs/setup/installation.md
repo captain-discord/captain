@@ -7,27 +7,17 @@ git clone https://github.com/Jack-Gledhill/captain
 
 ## Configuration files
 
-1. Make sure to cd into the captain/bot directory.
-2. Now you need to edit 2 files. These two files are `config.example.yml` and `guilds.example.yml`, you need to rename them to have the `.yml` without the `.example` then edit them.
-3. Lastly, you'll need to rename `core/constants.example.py` to `core/constants.py` then edit it. This file contains information for the core, like the bot's token and presence information.
+In both the `bot/` and `web/` directories, there'll be 2 files. They're `config.example.yml` and `core/constants.example.py`! You'll need to edit them and remove the `.example` from their name.
 
 ## Deploying a Captain container
 
-Deploying a container needs to be done in two steps. First you need to build the image, 	then you need to run an instance of that image. It's easy though so don't worry!
+Since we have multiple services, we can use a tool called Docker Compose to greatly simplify the deployment process.
 
-To build an image, cd into `captain/bot` then run `docker build`.
+To run Captain and all other subsidiaries, cd into `captain` then run the following command.
 ```
-docker build . --tag captain:3.2.0
+docker-compose up -d
 ```
-
-Now all that's left to do is run an instance of the container with `docker run`.
-```
-docker run -d -v ~/captain/bot/guilds.yml:/opt/bot/guilds.yml -v ~/captain/bot/config.yml:/opt/bot/config.yml -v ~/captain/bot/core/constants.py:/opt/bot/core/constants.py --name captain --network="host" captain:3.2.0
-```
-
-!!! note
-	If your clone's directory is located somewhere other than `~/captain`, you will need to change the bind-mounts for the config files.
 
 ## Additional support
 
-:tada: Congratulations, you have officially set up your own Captain bot! If, somehow, you haven't, then join the [official Discord server](https://discord.gg/pWraGYX) and we'll be happy to lend a hand!
+:tada: Congratulations, you have officially set up your own Captain bot! If, somehow, you haven't, then join the [official Discord server](https://discord.gg/EBFhZYY) and we'll be happy to lend a hand!

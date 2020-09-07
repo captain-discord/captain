@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block base_body_content %}
+	<div class="d-flex" id="wrapper">
+		{% include "extends/sidebar.html" %}
+	
+		<div id="page-content-wrapper">
+			{% include "extends/navbar.html" %}
+
+			<div class="container-fluid">
+				<div class="card" style="margin-bottom: 20px;">
+					<div class="card-header">Guild Widget</div>
+
+					<div class="card-body">
+						{% if info.get("widget_enabled") %}
+							<iframe src="https://discord.com/widget?id={{ id }}&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+						{% else %}
+							<i>Widget not enabled</i>
+						{% endif %}
+					</div>
+				</div>
+				
+				<div class="card">
+					<div class="card-header">Guild Info</div>
+
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-borderless">
+								<thead></thead>
+								<tbody>
+									<tr>
+										<td>ID</td>
+										<td>{{ id }}</td>
+									</tr>
+
+									<tr>
+										<td>Owner</td>
+										<td>{{ info.get("owner_id") }}</td>
+									</tr>
+
+									<tr>
+										<td>Voice region</td>
+										<td>{{ info.get("region") }}</td>
+									</tr>
+
+									<tr>
+										<td>Icon</td>
+										<td>
+											{% set icon = info.get('icon') %}
+											{% if icon %}
+												<img src="https://cdn.discordapp.com/icons/{{ id }}/{{ icon }}.png" height="128">
+											{% else %}
+												<i>No icon</i>
+											{% endif %}
+										</td>
+									</tr>
+
+									<tr>
+										<td>Splash</td>
+										<td>
+											{% set splash = info.get('splash') %}
+											{% if splash %}
+												<img src="https://cdn.discordapp.com/splashes/{{ id }}/{{ splash }}.png" height="128">
+											{% else %}
+												<i>No splash</i>
+											{% endif %}
+										</td>
+									</tr>
+
+									<tr>
+										<td>Banner</td>
+										<td>
+											{% set banner = info.get('banner') %}
+											{% if banner %}
+												<img src="https://cdn.discordapp.com/banners/{{ id }}/{{ banner }}.png" height="128">
+											{% else %}
+												<i>No banner</i>
+											{% endif %}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
+{% endblock %}

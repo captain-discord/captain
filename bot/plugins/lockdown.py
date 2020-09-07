@@ -23,16 +23,13 @@ class PrivateChannel(CustomException):
 	pass
 
 class Config:
-	def __init__(self, bot, guild):
+	def __init__(self, bot, guild, config):
 		self.bot = bot
 		self.guild = guild
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		raw = config.get("lockdown", {})
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("lockdown", {})
-
-		raw_role = self.raw.get("locked_role", "everyone")
+		raw_role = raw.get("locked_role", "everyone")
 
 		if raw_role in ("everyone", "@everyone"):
 			self.role = self.guild.default_role
@@ -40,7 +37,12 @@ class Config:
 		else:
 			self.role = self.guild.get_role(raw_role)
 		
-		self.whitelist = list(filter(None, [self.guild.get_role(r) for r in self.raw.get("whitelist", [])]))
+		self.whitelist = list(filter(None, [self.guild.get_role(r) for r in raw.get("whitelist", [])]))
+
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 	async def start(self, actor, channel, duration=None):
 		if not channel.permissions_for(channel.guild.me).manage_channels:
@@ -85,7 +87,8 @@ class Config:
 				extras={"channel_id": channel.id}
 			)
 
-		await LoggingHandler(self.bot, self.guild).dispatch("LOCKDOWN_TEMP" if duration is not None else "LOCKDOWN",
+		log = await LoggingHandler.new(self.bot, self.guild)
+		await log.dispatch("LOCKDOWN_TEMP" if duration is not None else "LOCKDOWN",
 			actor=actor,
 			channel=channel,
 			duration=time_since(seconds=duration) if duration is not None else None
@@ -132,7 +135,8 @@ class Config:
 		if expiring_timer is not None:
 			await expiring_timer.cancel()
 
-		await LoggingHandler(self.bot, self.guild).dispatch("LOCKDOWN_EXPIRE" if expired else "LOCKDOWN_CANCEL",
+		log = await LoggingHandler.new(self.bot, self.guild)
+		await log.dispatch("LOCKDOWN_EXPIRE" if expired else "LOCKDOWN_CANCEL",
 			actor=actor,
 			channel=channel
 		)
@@ -181,7 +185,8 @@ class Plugin(commands.Cog, name="Channel Lockdown"):
 	async def lockdown_start(self, ctx, *, duration: DurationConverter = None):
 		"""Starts a lockdown in the current channel with an optional duration."""
 
-		await Config(self.bot, ctx.guild).start(ctx.author, ctx.channel, duration)
+		config = await Config.new(self.bot, ctx.guild)
+		await config.start(ctx.author, ctx.channel, duration)
 		
 		if duration is not None:
 			return await ctx.success(f"Lockdown has been activated for {time_since(seconds=duration)}.\n**Use `lockdown end` to cancel lockdown.**")
@@ -196,7 +201,9 @@ class Plugin(commands.Cog, name="Channel Lockdown"):
 	async def lockdown_end(self, ctx):
 		"""Ends an existing lockdown on the current channel."""
 
-		await Config(self.bot, ctx.guild).end(ctx.author, ctx.channel)
+		config = await Config.new(self.bot, ctx.guild)
+		await config.end(ctx.author, ctx.channel)
+
 		await ctx.success("Lockdown has been cancelled.")
 
 	@commands.Cog.listener()
@@ -207,7 +214,8 @@ class Plugin(commands.Cog, name="Channel Lockdown"):
 			return
 
 		try:
-			await Config(self.bot, channel.guild).end(channel.guild.me, channel, True)
+			config = await Config.new(self.bot, channel.guild)
+			await config.end(channel.guild.me, channel, True)
 		
 		except NotLocked:
 			return

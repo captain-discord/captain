@@ -26,17 +26,19 @@ class CannotPunish(CustomException):
 		self.reason = reason
 
 class Handler:
-	def __init__(self, bot, guild):
+	def __init__(self, bot, guild, config):
 		self.bot = bot
 		self.guild = guild
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
+		raw = config.get("infractions", {})
 
-		self.raw = bot.configs.get(self.guild.id, {}).get("infractions", {})
+		self.mute_role = self.guild.get_role(raw.get("mute_role"))
+		self.ban_purge_days = raw.get("ban_purge_days", 7)
 
-		self.mute_role = self.guild.get_role(self.raw.get("mute_role"))
-		self.ban_purge_days = self.raw.get("ban_purge_days", 7)
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(bot, guild, config)
 
 	async def insert(self, actor, target, event, reason):
 		if not isinstance(actor, int):
@@ -88,7 +90,7 @@ class Handler:
 		)
 
 		case = await self.insert(actor, target, "ban", reason)
-		log = LoggingHandler(self.bot, self.guild)
+		log = await LoggingHandler.new(self.bot, self.guild)
 
 		if duration is not None:
 			await self.timer("ban", target, case, duration)
@@ -119,14 +121,16 @@ class Handler:
 		)
 
 		if case is not None:
-			await LoggingHandler(self.bot, self.guild).dispatch("MEMBER_BAN_EXPIRE", target,
+			log = await LoggingHandler.new(self.bot, self.guild)
+			await log.dispatch("MEMBER_BAN_EXPIRE", target,
 				target=target,
 				actor=actor,
 				case=case
 			)
 
 		else:
-			await LoggingHandler(self.bot, self.guild).dispatch("MEMBER_UNBAN", target,
+			log = await LoggingHandler.new(self.bot, self.guild)
+			await log.dispatch("MEMBER_UNBAN", target,
 				target=target,
 				actor=actor
 			)
@@ -143,7 +147,8 @@ class Handler:
 		)
 
 		case = await self.insert(actor, target, "ban", reason)
-		await LoggingHandler(self.bot, self.guild).dispatch("MEMBER_KICK", target,
+		log = await LoggingHandler.new(self.bot, self.guild)
+		await log.dispatch("MEMBER_KICK", target,
 			target=target,
 			actor=actor,
 			reason=reason,
@@ -170,7 +175,7 @@ class Handler:
 		)
 
 		case = await self.insert(actor, target, "mute", reason)
-		log = LoggingHandler(self.bot, self.guild)
+		log = await LoggingHandler.new(self.bot, self.guild)
 
 		if duration is not None:
 			await self.timer("mute", target, case, duration)
@@ -207,14 +212,16 @@ class Handler:
 		)
 
 		if case is not None:
-			await LoggingHandler(self.bot, self.guild).dispatch("MEMBER_MUTE_EXPIRE", target,
+			log = await LoggingHandler.new(self.bot, self.guild)
+			await log.dispatch("MEMBER_MUTE_EXPIRE", target,
 				target=target,
 				actor=actor,
 				case=case
 			)
 
 		else:
-			await LoggingHandler(self.bot, self.guild).dispatch("MEMBER_UNMUTE", target,
+			log = await LoggingHandler.new(self.bot, self.guild)
+			await log.dispatch("MEMBER_UNMUTE", target,
 				target=target,
 				actor=actor
 			)
@@ -224,7 +231,8 @@ class Handler:
 			raise AccessDenied()
 
 		case = await self.insert(actor, target, "warn", reason)
-		await LoggingHandler(self.bot, self.guild).dispatch("MEMBER_WARN", target,
+		log = await LoggingHandler.new(self.bot, self.guild)
+		await log.dispatch("MEMBER_WARN", target,
 			target=target,
 			actor=actor,
 			reason=reason,
@@ -319,7 +327,10 @@ class Plugin(commands.Cog, name="User Infractions"):
 		"""Banishes a user from the server. Providing an ID allows for a hackban instead."""
 
 		self.check_perms(ctx.author, target)
-		await Handler(self.bot, ctx.guild).ban(ctx.author, target, reason)
+		
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.ban(ctx.author, target, reason)
+
 		await ctx.success(f"{target} (`{target.id}`) has been banned for:\n{reason}")
 
 	@access_control.require(access_control.Level.MOD)
@@ -335,7 +346,10 @@ class Plugin(commands.Cog, name="User Infractions"):
 		"""Bans a user for a certain amount of time then unbans them afterwards."""
 
 		self.check_perms(ctx.author, target)
-		await Handler(self.bot, ctx.guild).ban(ctx.author, target, reason, duration)
+		
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.ban(ctx.author, target, reason, duration)
+
 		await ctx.success(f"{target} (`{target.id}`) has been banned for {time_since(seconds=duration)} for:\n{reason}")
 
 	@access_control.require(access_control.Level.MOD)
@@ -348,7 +362,9 @@ class Plugin(commands.Cog, name="User Infractions"):
 	):
 		"""Removes a ban placed on a provided user."""
 
-		await Handler(self.bot, ctx.guild).unban(ctx.author, target)
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.unban(ctx.author, target)
+		
 		await ctx.success(f"{target} (`{target.id}`) has been unbanned.")
 
 	@access_control.require(access_control.Level.MOD)
@@ -363,7 +379,10 @@ class Plugin(commands.Cog, name="User Infractions"):
 		"""Kicks a user from the server."""
 
 		self.check_perms(ctx.author, target)
-		await Handler(self.bot, ctx.guild).kick(ctx.author, target, reason)
+		
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.kick(ctx.author, target, reason)
+		
 		await ctx.success(f"{target} (`{target.id}`) has been kicked for:\n{reason}")
 
 	@access_control.require(access_control.Level.MOD)
@@ -378,7 +397,10 @@ class Plugin(commands.Cog, name="User Infractions"):
 		"""Gives the provided user the configured mute role."""
 
 		self.check_perms(ctx.author, target)
-		await Handler(self.bot, ctx.guild).mute(ctx.author, target, reason)
+		
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.mute(ctx.author, target, reason)
+		
 		await ctx.success(f"{target} (`{target.id}`) has been muted for:\n{reason}")
 
 	@access_control.require(access_control.Level.MOD)
@@ -394,7 +416,10 @@ class Plugin(commands.Cog, name="User Infractions"):
 		"""Temporarily adds the mute role to a user then removes it after."""
 
 		self.check_perms(ctx.author, target)
-		await Handler(self.bot, ctx.guild).mute(ctx.author, target, reason, duration)
+
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.mute(ctx.author, target, reason, duration)
+
 		await ctx.success(f"{target} (`{target.id}`) has been muted for {time_since(seconds=duration)} for:\n{reason}")
 
 	@access_control.require(access_control.Level.MOD)
@@ -408,7 +433,10 @@ class Plugin(commands.Cog, name="User Infractions"):
 		"""Removes the configured mute role from the user."""
 
 		self.check_perms(ctx.author, target)
-		await Handler(self.bot, ctx.guild).unmute(ctx.author, target)
+
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.unmute(ctx.author, target)
+
 		await ctx.success(f"{target} (`{target.id}`) has been unmuted.")
 
 	@access_control.require(access_control.Level.MOD)
@@ -422,7 +450,10 @@ class Plugin(commands.Cog, name="User Infractions"):
 		"""Issues a logged warning to the provided user."""
 
 		self.check_perms(ctx.author, target)
-		await Handler(self.bot, ctx.guild).warn(ctx.author, target, reason)
+		
+		handler = await Handler.new(self.bot, ctx.guild)
+		await handler.warn(ctx.author, target, reason)
+		
 		await ctx.success(f"{target} (`{target.id}`) has been warned for:\n{reason}")
 
 	@commands.group("inf",
@@ -564,7 +595,7 @@ class Plugin(commands.Cog, name="User Infractions"):
 	async def on_temp_mute_expire(self, target_id, guild_id, case_id):
 		guild = self.bot.get_guild(guild_id)
 		target = guild.get_member(target_id)
-		config = Handler(self.bot, guild)
+		config = await Handler.new(self.bot, guild)
 
 		if not guild.me.guild_permissions.manage_roles or config.mute_role is None:
 			return
@@ -603,7 +634,8 @@ class Plugin(commands.Cog, name="User Infractions"):
 			return
 
 		try:
-			await Handler(self.bot, guild).unban(guild.me, target, case_id)
+			handler = await Handler.new(self.bot, guild)
+			await handler.unban(guild.me, target, case_id)
 
 		except:
 			pass
@@ -621,7 +653,7 @@ class Plugin(commands.Cog, name="User Infractions"):
 
 	@commands.Cog.listener("on_member_update")
 	async def on_premature_unmute(self, before, after):
-		config = Handler(self.bot, after.guild)
+		config = await Handler.new(self.bot, after.guild)
 
 		if before.roles == after.roles or config.mute_role is None:
 			return

@@ -15,15 +15,13 @@ class Level:
 		self.overwrites = options.get("overwrites", {})
 
 class Config:
-	def __init__(self, bot, guild):
-		self.bot = bot
-		self.guild = guild
+	def __init__(self, guild, config):
+		self.levels = [Level(guild, r, **options) for r, options in config.get("access_control", {}).items()]
 
-		if isinstance(guild, int):
-			self.guild = bot.get_guild(guild)
-
-		self.raw = bot.configs.get(self.guild.id, {}).get("access_control", {})
-		self.levels = [Level(self.guild, r, **options) for r, options in self.raw.items()]
+	@classmethod
+	async def new(cls, bot, guild):
+		config = await bot.get_config(guild)
+		return cls(guild, config)
 
 	def can_use(self, member, command, needed_level):
 		if member.guild_permissions.administrator:
@@ -66,7 +64,8 @@ class Plugin(commands.Cog):
 
 	def require(self, level):
 		async def predicate(ctx):
-			return Config(self.bot, ctx.guild).can_use(ctx.author, ctx.command, level)
+			config = await Config.new(self.bot, ctx.guild)
+			return config.can_use(ctx.author, ctx.command, level)
 
 		return commands.check(predicate)
 

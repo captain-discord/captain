@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block base_body_content %}
+	<div class="container" style="height: 100vh;">
+		<div class="row align-items-center justify-content-center h-100 d-flex">
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header">
+						Login with Discord
+					</div>
+			
+					<div class="card-body" style="text-align: center;">
+						<a href="/api/login">
+							<img src="/static/img/discord.png" width="256" height="256">
+						</a>
+					</div>
+
+					<div class="card-footer">
+						If you need help, feel free to join the <a href="https://discord.gg/EBFhZYY">support server</a>.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <div class="card">
+		<div class="card-header">
+			Login with Discord
+		</div>
+
+		<div class="card-body" style="text-align: center; padding: 0; width: 256px; height: 256px;">
+			<a href="/api/login">
+				<img src="/static/img/discord.png" width="256" height="256">
+			</a>
+		</div>
+	</div> -->
+{% endblock %}
