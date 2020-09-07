@@ -16,6 +16,14 @@
 					Something went wrong when trying to save your changes!
 				</div>
 
+				<div id="malformed-config" class="alert alert-danger d-none" role="alert">
+					Double check the syntax, the server says it's incorrect!
+				</div>
+
+				<div id="not-editor" class="alert alert-danger d-none" role="alert">
+					Only editors and server managers can change the guild's config!
+				</div>
+
 				<div class="card">
 					<div class="card-header">Configuration Editor</div>
 
@@ -39,7 +47,7 @@
 				<script>
 					var e = ace.edit("e");
 
-					e.setTheme("ace/theme/twilight");
+					e.setTheme("ace/theme/monokai");
 					e.getSession().setMode("ace/mode/yaml");
 					e.setFontSize("20");
 					e.setOption("maxLines", 30);

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block base_body_content %}
+	<div class="d-flex" id="wrapper">
+		{% include "extends/sidebar.html" %}
+	
+		<div id="page-content-wrapper">
+			{% include "extends/navbar.html" %}
+
+			<div class="container-fluid">
+				<h1>Under maintenance</h1>
+				<hr>
+				<p>This page isn't complete yet, keep an eye on the GitHub repo for new commits!</p>				
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -23,10 +23,9 @@ def index():
 def dash(discord):
 	available_guilds = []
 	for guild in discord.guilds:
-		perms = int(guild.get("permissions_new"))
-
-		if (perms & 8 == 8) or (perms & 32 == 32):
-			available_guilds.append(guild)
+		g = require_guild(discord, guild.get("id"))
+		if g is not None:
+			available_guilds.append(g)
 
 	return render_template("dash/guilds.html",
 		discord=discord,
@@ -85,6 +84,17 @@ def infractions(discord, gid):
 	return render_template("dash/infractions.html",
 		id=gid,
 		infractions=result
+	)
+
+@app.route(BASE + "/<gid>/leaderboard")
+@require_auth
+def leaderboard(discord, gid):
+	guild = require_guild(discord, gid)
+	if guild is None:
+		return abort(403)
+	
+	return render_template("dash/leaderboard.html",
+		id=gid
 	)
 
 @app.errorhandler(RequiresAuth)

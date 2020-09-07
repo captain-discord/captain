@@ -3,10 +3,11 @@ import os
 import ext.state as state
 
 from flask import jsonify, redirect, request, session
+from yaml import safe_load
 
 from ext.models import CLIENT_ID, OAuth2Handler
 from ext.state import app
-from ext.utils import require_auth
+from ext.utils import require_auth, require_guild
 
 BASE = "/api"
 INVITE_BASE = "https://discord.com/api/oauth2/authorize?client_id={client_id}&permissions={perms}&scope=bot"
@@ -56,24 +57,23 @@ def update_config(discord, gid):
 			"message": "Content-Type must be application/json"
 		}), 415
 
-	guild = None
-	for g in discord.guilds:
-		if g.get("id") == gid:
-			guild = g
-			break
-
+	guild = require_guild(discord, gid, True)
 	if guild is None:
 		return jsonify({
-			"code": 404,
-			"message": "Guild doesn't exist in user's cache."
-		}), 404
-
-	perms = int(guild.get("permissions_new"))
-	if not (perms & 8 == 8) and not (perms & 32 == 32):
-		return jsonify({
 			"code": 403,
-			"message": "You don't have permission to edit that guild's config."
+			"message": "You don't have permission to change the guild's config or the guild doesn't exist."
 		}), 403
+
+	updated_config = request.json.get("newConfig")
+
+	try:
+		safe_load(updated_config)
+
+	except:
+		return jsonify({
+			"code": 400,
+			"message": "Malformed yaml config."
+		})
 
 	with app.db.cursor() as con:
 		query = """INSERT INTO guild_configs (id, config)
@@ -84,7 +84,7 @@ def update_config(discord, gid):
 
 		con.execute(query, dict(
 			id=gid, 
-			config=request.json.get("newConfig")
+			config=updated_config
 		))
 
 		return jsonify({

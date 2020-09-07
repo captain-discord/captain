@@ -14,7 +14,8 @@ nav:
       Get Captain: intro/get-captain.md
       
   - Changelog:
-      All Releases: changelog/index.md
+	  All Releases: changelog/index.md
+      Release v3.3.1: changelog/v3.3.1.md
       Release v3.3.0: changelog/v3.3.0.md
       Release v3.2.0: changelog/v3.2.0.md
       Release v3.1.1: changelog/v3.1.1.md
@@ -43,6 +44,7 @@ nav:
       Roles for Badges: config/roles-for-badges.md
       Starboards: config/starboards.md
       Stat Counters: config/stat-counters.md
+      Web: config/web.md
 
 theme:
   name: material
