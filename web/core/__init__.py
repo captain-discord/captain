@@ -27,7 +27,7 @@ class Core(Flask):
 		self.log.info("Running {0.name} v{0.major}.{0.minor}.{0.patch}-{0.release}".format(VERSION))
 
 		try:
-			self.run(port=constants.PORT)
+			self.run(port=constants.PORT, host="0.0.0.0")
 
 		except KeyboardInterrupt:
 			self.log.info("Shutting down, reason: manually stopped.")
